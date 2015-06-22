@@ -1,0 +1,36 @@
+{
+  "name": "jsonapify",
+  "version": "0.0.0",
+  "description": "Middleware for easy development of JSON-API compatible APIs",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/alex94puchades/jsonapify.git"
+  },
+  "keywords": [
+    "json",
+    "api",
+    "rest",
+    "connect",
+    "middleware"
+  ],
+  "author": "Alejandro Caravaca Puchades <alex94puchades@gmail.com>",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/alex94puchades/jsonapify/issues"
+  },
+  "devDependencies": {
+    "async": "^1.2.1",
+    "chai": "^3.0.0",
+    "mocha": "^2.2.5",
+    "mockgoose": "^2.0.3",
+    "mongoose": "^4.0.6",
+    "node-mocks-http": "^1.4.3"
+  },
+  "dependencies": {
+    "lodash": "^3.9.3"
+  }
+}
