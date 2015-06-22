@@ -2,9 +2,12 @@ var expect = require('chai').expect;
 var httpMocks = require('node-mocks-http');
 var jsonapify = require('../');
 
+var util = require('util');
+
 describe('initialize', function() {
 	var initialize, req, res;
 	before(function() {
+		console.log('FOO');
 		initialize = jsonapify.initialize();
 	});
 	
@@ -19,29 +22,35 @@ describe('initialize', function() {
 			expect(res).to.have.property('meta');
 			expect(res).to.have.property('links');
 			expect(res).to.have.property('errors');
+			expect(res).to.have.property('setLink');
+			expect(res).to.have.property('setMeta');
 			expect(res).to.have.property('sendData');
 			expect(res).to.have.property('sendError');
 			done();
 		});
 	});
 	
-	describe('#sendError', function(done) {
-		initialize(req, res, function(err) {
-			if (err) return done(err);
-			res.sendError({
-				
+	describe('#sendError', function() {
+		it('sends error in json-api compatible format', function(done) {
+			initialize(req, res, function(err) {
+				if (err) return done(err);
+				res.sendError({
+					
+				});
+				done();
 			});
-			done();
 		});
 	});
 	
-	describe('#sendData', function(done) {
-		initialize(req, res, function(err) {
-			if (err) return done(err);
-			res.sendData({
-				
+	describe('#sendData', function() {
+		it('sends data in json-api compatible format', function(done) {
+			initialize(req, res, function(err) {
+				if (err) return done(err);
+				res.sendData({
+					
+				});
+				done();
 			});
-			done();
 		});
 	});
 });
