@@ -7,7 +7,6 @@ var util = require('util');
 describe('initialize', function() {
 	var initialize, req, res;
 	before(function() {
-		console.log('FOO');
 		initialize = jsonapify.initialize();
 	});
 	

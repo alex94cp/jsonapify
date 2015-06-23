@@ -9,12 +9,12 @@ var TestModel = require('./testModel');
 describe('Resource', function() {
 	var resource, object;
 	before(function() {
-		resource = jsonapify(TestModel, {
+		resource = new jsonapify.Resource(TestModel, {
 			type: 'testModel',
 			id: jsonapify.field('_id'),
 			attributes: {
 				fieldAttr: jsonapify.field('string'),
-				constAttr: jsonapify.const('constValue'),
+				constAttr: 'constValue',
 			},
 		});
 	});

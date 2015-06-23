@@ -11,7 +11,7 @@ var TestModel = require('./testModel');
 describe('enumerate', function() {
 	var resource, initialize, enumerate, req, res;
 	before(function(done) {
-		resource = jsonapify(TestModel, {
+		resource = new jsonapify.Resource(TestModel, {
 			type: 'testModel',
 			id: jsonapify.field('_id'),
 			attributes: {
