@@ -10,6 +10,9 @@ describe('Resource', function() {
 	var resource, object;
 	before(function() {
 		resource = new jsonapify.Resource(TestModel, {
+			links: {
+				self: jsonapify.format('/testmodels/{_id}'),
+			},
 			attributes: {
 				fieldAttr: jsonapify.field('string'),
 				constAttr: 'constValue',
@@ -41,14 +44,18 @@ describe('Resource', function() {
 			expect(wrapped).to.have.property('type', 'testmodels');
 			expect(wrapped).to.have.deep.property('attributes.constAttr', 'constValue');
 			expect(wrapped).to.have.deep.property('attributes.fieldAttr', object.string);
+			expect(wrapped).to.have.deep.property('links.self', '/testmodels/' + object._id);
 		});
 	});
 	
 	describe('#unwrap', function() {
 		it('turns resource object into model instance', function() {
 			var data = {
-				type: 'testModel',
+				type: 'testmodels',
 				id: mongoose.Types.ObjectId(),
+				links: {
+					self: '/testmodels/0123456789',
+				},
 				attributes: {
 					fieldAttr: 'fieldValue',
 					constAttr: 'constValue',
