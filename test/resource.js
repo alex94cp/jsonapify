@@ -10,8 +10,6 @@ describe('Resource', function() {
 	var resource, object;
 	before(function() {
 		resource = new jsonapify.Resource(TestModel, {
-			type: 'testModel',
-			id: jsonapify.field('_id'),
 			attributes: {
 				fieldAttr: jsonapify.field('string'),
 				constAttr: 'constValue',
@@ -40,7 +38,7 @@ describe('Resource', function() {
 			var object = new TestModel({ string: 'strValue' });
 			var wrapped = resource.wrap(object);
 			expect(wrapped).to.have.property('id', object._id);
-			expect(wrapped).to.have.property('type', 'testModel');
+			expect(wrapped).to.have.property('type', 'testmodels');
 			expect(wrapped).to.have.deep.property('attributes.constAttr', 'constValue');
 			expect(wrapped).to.have.deep.property('attributes.fieldAttr', object.string);
 		});
