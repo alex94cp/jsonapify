@@ -9,7 +9,7 @@ var TestModel = require('./testModel');
 describe('Resource', function() {
 	var resource, object;
 	before(function() {
-		resource = new jsonapify.Resource(TestModel, {
+		resource = jsonapify.resource(TestModel, {
 			attributes: {
 				fieldAttr: jsonapify.field('string'),
 				constAttr: 'constValue',
