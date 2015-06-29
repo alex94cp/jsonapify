@@ -69,6 +69,7 @@ describe('Resource', function() {
 				complex: {
 					inner: 'b',
 				},
+				serializable: 'c',
 			};
 		});
 		
