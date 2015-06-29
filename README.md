@@ -11,15 +11,14 @@ $ npm install jsonapify
 ## Sample code
 
 ```js
-var auth = require('../auth');
+var auth = require('./auth');
 var express = require('express');
-var passport = require('passport');
 var jsonapify = require('jsonapify');
 
 var User = require('./models/user');
-var userResource = new jsonapify.Resource(User, {
-	id: jsonapify.field('_id'),
+var userResource = new jsonapify.resource(User, {
 	type: 'users',
+	id: jsonapify.field('_id'),
 	attributes: {
 		name: jsonapify.field('name.full'),
 		password: jsonapify.field('password', { readable: false }),
@@ -27,10 +26,11 @@ var userResource = new jsonapify.Resource(User, {
 });
 
 var router = express.Router();
-router.get('/', jsonapify.enumerate(userResource), {
+router.get('/', jsonapify.enumerate(userResource, {
 	middleware: [
 		auth.authenticateAccessToken(),
 		auth.requirePrivilege('user:enum'),
+		jsonapify.errorHandler(),
 	],
 });
 
