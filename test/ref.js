@@ -1,11 +1,11 @@
 var chai = require('chai');
 var expect = chai.expect;
 
-var Field = require('../lib/field');
+var Ref = require('../lib/ref');
 var Response = require('../lib/response');
 var TestModel = require('./testModel');
 
-describe('Field', function() {
+describe('Ref', function() {
 	describe('#serialize', function() {
 		it('sets resource field from document', function(done) {
 			var output = {};
@@ -15,18 +15,6 @@ describe('Field', function() {
 			field.serialize(object, response, function(err, value) {
 				if (err) return done(err);
 				expect(value).to.equal(object.string);
-				done();
-			});
-		});
-		
-		it('omits not-readable fields from document', function(done) {
-			var output = {};
-			var response = new Response;
-			var object = new TestModel({ string: 'string' });
-			var field = new Field('string', { readable: false });
-			field.serialize(object, response, function(err, value) {
-				if (err) return done(err);
-				expect(value).to.not.exist;
 				done();
 			});
 		});
@@ -40,17 +28,6 @@ describe('Field', function() {
 			field.deserialize('string', response, output, function(err) {
 				if (err) return done(err);
 				expect(output).to.have.property('string', 'string');
-				done();
-			});
-		});
-		
-		it('does not set not-writable fields into resource object', function(done) {
-			var output = new TestModel;
-			var response = new Response;
-			var field = new Field('string', { writable: false });
-			field.deserialize('string', response, output, function(err) {
-				if (err) return done(err);
-				expect(output).to.have.property('string', undefined);
 				done();
 			});
 		});

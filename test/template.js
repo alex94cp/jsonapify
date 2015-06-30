@@ -10,7 +10,7 @@ var TestModel = require('./testModel');
 
 describe('Template', function() {
 	describe('#serialize', function() {
-		it('sets resource property according to template', function(done) {
+		it('sets resource field according to template', function(done) {
 			var output = {};
 			var object = new TestModel;
 			var response = new Response;
@@ -25,7 +25,7 @@ describe('Template', function() {
 	});
 	
 	describe('#deserialize', function() {
-		it('does not change anything in document object', function(done) {
+		it('does not change anything in document', function(done) {
 			var output = new TestModel;
 			var response = new Response;
 			var id = mongoose.Types.ObjectId();

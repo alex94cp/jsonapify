@@ -7,7 +7,7 @@ var TestModel = require('./testModel');
 
 describe('Const', function() {
 	describe('#serialize', function() {
-		it('sets resource property to value', function(done) {
+		it('sets resource field to value', function(done) {
 			var output = {};
 			var object = new TestModel;
 			var response = new Response;
@@ -21,7 +21,7 @@ describe('Const', function() {
 	});
 	
 	describe('#deserialize', function() {
-		it('does not change anything in document object', function(done) {
+		it('does not change anything in document', function(done) {
 			var output = new TestModel;
 			var response = new Response;
 			var constant = new Const('value');
