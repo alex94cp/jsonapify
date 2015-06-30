@@ -72,10 +72,18 @@ describe('Response', function() {
 	});
 	
 	describe('#include', function() {
-		it('adds include to included object', function() {
-			response.include('include');
+		it('sets include to included object', function() {
+			response.include('type', 1, { field: 'field' });
+			var expected = { type: 'type', id: 1, field: 'field' };
 			var data = response.toJSON();
-			expect(data).to.have.property('included').which.includes('include');
+			expect(data).to.have.property('included').which.includes(expected);
+		});
+		
+		it('returns included object', function() {
+			response.include('type', 1, { field: 'field' });
+			var expected = { type: 'type', id: 1, field: 'field' };
+			var include = response.include('type', 1);
+			expect(include).to.deep.equal(expected);
 		});
 	});
 });
