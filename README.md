@@ -16,11 +16,12 @@ var express = require('express');
 var jsonapify = require('jsonapify');
 
 var User = require('./models/user');
+var roleResource = require('./roles').Resource;
 var userResource = new jsonapify.resource(User, {
 	type: 'users',
 	id: jsonapify.field('_id'),
 	attributes: {
-		name: jsonapify.field('name.full'),
+		email: jsonapify.field('email'),
 		password: jsonapify.field('password', { readable: false }),
 	},
 	relationships: {
@@ -37,5 +38,6 @@ router.get('/', jsonapify.enumerate(userResource, {
 	],
 });
 
-module.exports = router;
+module.exports = exports = router;
+exports.Resource = userResource;
 ```
