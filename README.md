@@ -23,6 +23,9 @@ var userResource = new jsonapify.resource(User, {
 		name: jsonapify.field('name.full'),
 		password: jsonapify.field('password', { readable: false }),
 	},
+	relationships: {
+		role: jsonapify.ref(roleResource, 'role'),
+	},
 });
 
 var router = express.Router();
