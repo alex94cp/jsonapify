@@ -1,9 +1,9 @@
 var chai = require('chai');
 var expect = chai.expect;
 
-var Field = require('../lib/field');
-var Response = require('../lib/response');
 var TestModel = require('./testModel');
+var Response = require('../lib/response');
+var Field = require('../lib/accessors/field');
 
 describe('Field', function() {
 	describe('#serialize', function() {

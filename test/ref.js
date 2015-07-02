@@ -7,11 +7,11 @@ var mongoose = require('mongoose');
 
 mongoose.connect('mongodb://localhost/test');
 
-var Ref = require('../lib/ref');
-var Field = require('../lib/field');
+var TestModel = require('./testModel');
 var Response = require('../lib/response');
 var Resource = require('../lib/resource');
-var TestModel = require('./testModel');
+var Field = require('../lib/accessors/field');
+var Ref = require('../lib/accessors/ref');
 
 describe('Ref', function() {
 	beforeEach(function() {

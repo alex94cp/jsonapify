@@ -1,9 +1,9 @@
 var chai = require('chai');
 var expect = chai.expect;
 
-var Const = require('../lib/const');
-var Response = require('../lib/response');
 var TestModel = require('./testModel');
+var Response = require('../lib/response');
+var Const = require('../lib/accessors/const');
 
 describe('Const', function() {
 	describe('#serialize', function() {

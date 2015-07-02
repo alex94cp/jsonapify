@@ -4,9 +4,9 @@ var expect = chai.expect;
 var util = require('util');
 var mongoose = require('mongoose');
 
-var Template = require('../lib/template');
-var Response = require('../lib/response');
 var TestModel = require('./testModel');
+var Response = require('../lib/response');
+var Template = require('../lib/accessors/template');
 
 describe('Template', function() {
 	describe('#serialize', function() {
