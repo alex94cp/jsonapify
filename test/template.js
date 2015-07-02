@@ -26,7 +26,7 @@ describe('Template', function() {
 	
 	describe('#deserialize', function() {
 		it('does not change anything in document', function(done) {
-			var output = new TestModel;
+			var output = {};
 			var response = new Response;
 			var id = mongoose.Types.ObjectId();
 			var selfUrl = util.format('/testmodels/%s', id);
