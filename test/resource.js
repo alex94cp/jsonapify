@@ -7,6 +7,8 @@ var mongoose = require('mongoose');
 var mockgoose = require('mockgoose');
 mockgoose(mongoose);
 
+mongoose.connect('mongodb://localhost/test');
+
 var Resource = require('../lib/resource');
 var Response = require('../lib/response');
 var TestModel = require('./testModel');
@@ -18,7 +20,6 @@ TestSerializer.prototype.deserialize = function() {};
 describe('Resource', function() {
 	var resource, serializer;
 	before(function() {
-		mongoose.connect('mongodb://localhost/test');
 		serializer = new TestSerializer;
 		resource = new Resource(TestModel, {
 			simple: 'a',
@@ -40,18 +41,17 @@ describe('Resource', function() {
 	describe('#serialize', function() {
 		var response, object, mock;
 		before(function() {
+			object = new TestModel;
+			response = new Response;
 			mock = sinon.mock(serializer);
 			mock.expects('serialize').callsArgAsync(2).once();
-			response = new Response;
-			object = new TestModel;
 		});
 		
 		it('turns a document object into resource form', function(done) {
-			var output = {};
-			resource.serialize(object, response, output, function(err) {
+			resource.serialize(object, response, function(err, resdata) {
 				if (err) return done(err);
-				expect(output).to.have.property('simple', 'a');
-				expect(output).to.have.deep.property('complex.inner', 'b');
+				expect(resdata).to.have.property('simple', 'a');
+				expect(resdata).to.have.deep.property('complex.inner', 'b');
 				mock.verify();
 				done();
 			});
