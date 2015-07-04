@@ -23,7 +23,7 @@
     "url": "https://github.com/alex94puchades/jsonapify/issues"
   },
   "devDependencies": {
-    "async": "^1.2.1",
+    "async": "^1.3.0",
     "chai": "^3.0.0",
     "mocha": "^2.2.5",
     "mockgoose": "^2.0.3",
@@ -31,6 +31,6 @@
     "node-mocks-http": "^1.4.3"
   },
   "dependencies": {
-    "lodash": "^3.9.3"
+    "lodash": "^3.10.0"
   }
 }
