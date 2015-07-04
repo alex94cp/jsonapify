@@ -13,14 +13,17 @@ var Resource = require('../lib/resource');
 
 describe('enumerate', function() {
 	var TestModel, resource, enumerate;
-	before(function() {
-		mongoose.connect('mongodb://localhost/test');
-		TestModel = require('./testModel');
-		resource = new Resource(TestModel, {
-			type: 'testmodels',
-			id: jsonapify.field('_id'),
+	before(function(done) {
+		mongoose.connect('mongodb://localhost/test', function(err) {
+			if (err) return done(err);
+			TestModel = require('./testModel');
+			resource = new Resource(TestModel, {
+				type: 'testmodels',
+				id: jsonapify.field('_id'),
+			});
+			enumerate = jsonapify.enumerate(resource);
+			done();
 		});
-		enumerate = jsonapify.enumerate(resource);
 	});
 	
 	beforeEach(function() {

@@ -12,14 +12,17 @@ var Ref = require('../lib/accessors/ref');
 
 describe('Ref', function() {
 	var TestModel;
-	before(function() {
-		mongoose.connect('mongodb://localhost/test');
-		TestModel = require('./testModel');
+	before(function(done) {
+		mongoose.connect('mongodb://localhost/test', function(err) {
+			if (err) return done(err)
+			TestModel = require('./testModel');
+			done();
+		});
 	});
 	
 	beforeEach(function() {
 		// mockgoose.reset();
-		// mongoose.connection.db.dropDatabase();
+		mongoose.connection.db.dropDatabase();
 	});
 	
 	after(function(done) {

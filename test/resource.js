@@ -3,22 +3,17 @@ var sinon = require('sinon');
 chai.use(require('sinon-chai'));
 var expect = chai.expect;
 
-var mongoose = require('mongoose');
-// var mockgoose = require('mockgoose');
-// mockgoose(mongoose);
-
 var Resource = require('../lib/resource');
 var Response = require('../lib/response');
+var TestModel = require('./testModel');
 
 function TestSerializer() {}
 TestSerializer.prototype.serialize = function() {};
 TestSerializer.prototype.deserialize = function() {};
 
 describe('Resource', function() {
-	var TestModel, resource, serializer;
+	var resource, serializer;
 	before(function() {
-		mongoose.connect('mongodb://localhost/test');
-		TestModel = require('./testModel');
 		serializer = new TestSerializer;
 		resource = new Resource(TestModel, {
 			simple: 'a',
@@ -27,15 +22,6 @@ describe('Resource', function() {
 			},
 			serializable: serializer,
 		});
-	});
-	
-	beforeEach(function() {
-		// mockgoose.reset();
-		mongoose.connection.db.dropDatabase();
-	});
-	
-	after(function(done) {
-		mongoose.disconnect(done);
 	});
 	
 	describe('#serialize', function() {
