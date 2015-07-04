@@ -9,6 +9,16 @@ var Response = require('../lib/response');
 var Template = require('../lib/accessors/template');
 
 describe('Template', function() {
+	var TestModel;
+	before(function() {
+		mongoose.connect('mongodb://localhost/test');
+		TestModel = require('./testModel');
+	});
+	
+	after(function(done) {
+		mongoose.disconnect(done);
+	});
+	
 	describe('#serialize', function() {
 		it('sets resource field according to template', function(done) {
 			var output = {};

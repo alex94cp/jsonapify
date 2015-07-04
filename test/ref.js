@@ -5,22 +5,25 @@ var mongoose = require('mongoose');
 // var mockgoose = require('mockgoose');
 // mockgoose(mongoose);
 
-mongoose.connect('mongodb://localhost/test');
-
-var TestModel = require('./testModel');
 var Response = require('../lib/response');
 var Resource = require('../lib/resource');
 var Field = require('../lib/accessors/field');
 var Ref = require('../lib/accessors/ref');
 
 describe('Ref', function() {
-	beforeEach(function() {
-		// mockgoose.reset();
-		mongoose.connection.db.dropDatabase();
+	var TestModel;
+	before(function() {
+		mongoose.connect('mongodb://localhost/test');
+		TestModel = require('./testModel');
 	});
 	
-	after(function() {
-		mongoose.disconnect();
+	beforeEach(function() {
+		// mockgoose.reset();
+		// mongoose.connection.db.dropDatabase();
+	});
+	
+	after(function(done) {
+		mongoose.disconnect(done);
 	});
 	
 	describe('#serialize', function() {
