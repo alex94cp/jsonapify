@@ -13,7 +13,7 @@ var Ref = require('../lib/accessors/ref');
 describe('Ref', function() {
 	var TestModel;
 	before(function(done) {
-		mongoose.connect('mongodb://localhost/test', function(err) {
+		mongoose.connect('mongodb://localhost/test-ref', function(err) {
 			if (err) return done(err)
 			TestModel = require('./testModel');
 			done();
