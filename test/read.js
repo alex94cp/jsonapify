@@ -11,16 +11,15 @@ var jsonapify = require('../');
 var Resource = require('../lib/resource');
 
 describe('read', function() {
-	var TestModel, resource, read;
+	var TestModel, resource;
 	before(function(done) {
-		mongoose.connect('mongodb://localhost/test', function(err) {
+		mongoose.connect('mongodb://localhost/test-read', function(err) {
 			if (err) return done(err);
 			TestModel = require('./testModel');
 			resource = new Resource(TestModel, {
 				type: 'testmodels',
 				id: jsonapify.field('_id'),
 			});
-			read = jsonapify.read(resource);
 			done();
 		});
 	});
@@ -34,12 +33,12 @@ describe('read', function() {
 		mongoose.disconnect(done);
 	});
 	
-	it('sends expected json-api response', function(done) {
+	it('sends back expected json-api response', function(done) {
 		TestModel.create({}, function(err, object) {
 			if (err) return done(err);
 			var req = httpMocks.createRequest({ params: { id: object._id }});
 			var res = httpMocks.createResponse();
-			read(req, res, function(err) {
+			jsonapify.read(resource)(req, res, function(err) {
 				if (err) return done(err);
 				expect(res.statusCode).to.equal(200);
 				var resdata = JSON.parse(res._getData());
@@ -58,7 +57,7 @@ describe('read', function() {
 		var oid = mongoose.Types.ObjectId();
 		var req = httpMocks.createRequest({ params: { id: oid }});
 		var res = httpMocks.createResponse();
-		read(req, res, function(err) {
+		jsonapify.read(resource)(req, res, function(err) {
 			if (err) return done(err);
 			expect(res.statusCode).to.equal(404);
 			var resdata = JSON.parse(res._getData());

@@ -12,16 +12,15 @@ var jsonapify = require('../');
 var Resource = require('../lib/resource');
 
 describe('enumerate', function() {
-	var TestModel, resource, enumerate;
+	var TestModel, resource;
 	before(function(done) {
-		mongoose.connect('mongodb://localhost/test', function(err) {
+		mongoose.connect('mongodb://localhost/test-enum', function(err) {
 			if (err) return done(err);
 			TestModel = require('./testModel');
 			resource = new Resource(TestModel, {
 				type: 'testmodels',
 				id: jsonapify.field('_id'),
 			});
-			enumerate = jsonapify.enumerate(resource);
 			done();
 		});
 	});
@@ -35,7 +34,7 @@ describe('enumerate', function() {
 		mongoose.disconnect(done);
 	});
 	
-	it('sends expected json-api response', function(done) {
+	it('sends back expected json-api response', function(done) {
 		async.parallel([
 			TestModel.create.bind(TestModel, {}),
 			TestModel.create.bind(TestModel, {}),
@@ -44,7 +43,7 @@ describe('enumerate', function() {
 			if (err) return done(err);
 			var req = httpMocks.createRequest();
 			var res = httpMocks.createResponse();
-			enumerate(req, res, function(err) {
+			jsonapify.enumerate(resource)(req, res, function(err) {
 				if (err) return done(err);
 				var count = results.length;
 				expect(res.statusCode).to.equal(200);
@@ -64,7 +63,7 @@ describe('enumerate', function() {
 	it('sends empty array if no resources', function(done) {
 		var req = httpMocks.createRequest();
 		var res = httpMocks.createResponse();
-		enumerate(req, res, function(err) {
+		jsonapify.enumerate(resource)(req, res, function(err) {
 			if (err) return done(err);
 			expect(res.statusCode).to.equal(200);
 			var resdata = JSON.parse(res._getData());
