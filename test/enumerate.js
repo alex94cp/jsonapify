@@ -36,9 +36,9 @@ describe('enumerate', function() {
 	
 	it('sends back expected json-api response', function(done) {
 		async.parallel([
-			TestModel.create.bind(TestModel, {}),
-			TestModel.create.bind(TestModel, {}),
-			TestModel.create.bind(TestModel, {}),
+			function(cb) { TestModel.create({}, cb); },
+			function(cb) { TestModel.create({}, cb); },
+			function(cb) { TestModel.create({}, cb); },
 		], function(err, results) {
 			if (err) return done(err);
 			var req = httpMocks.createRequest();
@@ -49,12 +49,47 @@ describe('enumerate', function() {
 				expect(res.statusCode).to.equal(200);
 				var resdata = JSON.parse(res._getData());
 				expect(resdata).to.have.property('data');
-				expect(resdata.data).to.have.length(count);
-				expect(resdata).to.have.deep.property('meta.count', count);
-				for (var i = 0; i < count; ++i) {
-					var match = { type: 'testmodels', id: results[i].id };
+				_(results).tap(function(results) {
+					var count = results.length;
+					expect(resdata.data).to.have.length(count);
+					expect(resdata).to.have.deep.property('meta.count', count);
+				}).each(function(object) {
+					var match = _.pick(object, ['type', 'id']);
 					expect(resdata.data).to.include(match);
-				}
+				});
+				done();
+			});
+		});
+	});
+	
+	it('allows a subresource to be specified', function(done) {
+		async.parallel([
+			function(cb) { TestModel.create({ string: 'a' }, cb); },
+			function(cb) { TestModel.create({ string: 'a' }, cb); },
+			function(cb) { TestModel.create({ string: 'a' }, cb); },
+			function(cb) { TestModel.create({ string: 'b' }, cb); },
+			function(cb) { TestModel.create({ string: 'b' }, cb); },
+			function(cb) { TestModel.create({ string: 'c' }, cb); },
+		], function(err, results) {
+			if (err) return done(err);
+			var req = httpMocks.createRequest({ params: { id: results[0]._id }});
+			var res = httpMocks.createResponse();
+			jsonapify.enumerate(
+				resource, jsonapify.param('id'),
+				resource, { string: jsonapify.parent('string') }
+			)(req, res, function(err) {
+				if (err) return done(err);
+				expect(res.statusCode).to.equal(200);
+				var resdata = JSON.parse(res._getData());
+				expect(resdata).to.have.property('data');
+				_(results).filter({ string: 'a' }).tap(function(results) {
+					var count = results.length;
+					expect(resdata.data).to.have.length(count);
+					expect(resdata).to.have.deep.property('meta.count', count);
+				}).each(function(object) {
+					var match = _.pick(object, ['type', 'id']);
+					expect(resdata.data).to.include(match);
+				});
 				done();
 			});
 		});
