@@ -35,20 +35,19 @@ describe('Field', function() {
 			var output = {};
 			var response = new Response;
 			var field = new Field('string');
-			field.deserialize('string', response, output, function(err) {
+			field.deserialize('value', response, output, function(err) {
 				if (err) return done(err);
-				expect(output).to.have.property('string', 'string');
+				expect(output).to.have.property('string', 'value');
 				done();
 			});
 		});
 		
-		it('does not set not-writable fields into resource object', function(done) {
+		it('throws an error if trying to set non-writable field', function(done) {
 			var output = {};
 			var response = new Response;
 			var field = new Field('string', { writable: false });
-			field.deserialize('string', response, output, function(err) {
-				if (err) return done(err);
-				expect(output).not.to.have.property('string');
+			field.deserialize('value', response, output, function(err) {
+				expect(err).to.exist;
 				done();
 			});
 		});
