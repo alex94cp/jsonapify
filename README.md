@@ -20,6 +20,9 @@ var roleResource = require('./roles').Resource;
 var userResource = new jsonapify.resource(User, {
 	type: 'users',
 	id: jsonapify.field('_id'),
+	links: {
+		self: jsonapify.template('/users/{_id}'),
+	},
 	attributes: {
 		email: jsonapify.field('email'),
 		password: jsonapify.field('password', { readable: false }),
