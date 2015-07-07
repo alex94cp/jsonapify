@@ -45,25 +45,39 @@ describe('Resource', function() {
 	});
 	
 	describe('#deserialize', function() {
-		var response, resdata, mock;
+		var response, mock;
 		before(function() {
 			mock = sinon.mock(serializer);
 			mock.expects('deserialize').callsArgAsync(3).once();
 			response = new Response();
-			resdata = {
+		});
+		
+		it('turns resource data into a document object', function(done) {
+			var resdata = {
 				simple: 'a',
 				complex: {
 					inner: 'b',
 				},
 				serializable: 'c',
 			};
-		});
-		
-		it('turns resource data into a document object', function(done) {
-			var output = new TestModel;
+			var output = {};
 			resource.deserialize(resdata, response, output, function(err) {
 				if (err) return done(err);
 				mock.verify();
+				done();
+			});
+		});
+		
+		it('gives an error if resource data does not match', function(done) {
+			var resdata = {
+				simple: 'invalid',
+				complex: {
+					inner: 'invalid',
+				},
+			};
+			var output = {};
+			resource.deserialize(resdata, response, output, function(err) {
+				expect(err).to.exist;
 				done();
 			});
 		});

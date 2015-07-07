@@ -26,5 +26,15 @@ describe('Const', function() {
 			var constant = new Const('value');
 			constant.deserialize('value', response, output, done);
 		});
+		
+		it('gives an error if resource data does not match', function(done) {
+			var output = {};
+			var response = new Response;
+			var constant = new Const('value');
+			constant.deserialize('invalid', response, output, function(err) {
+				expect(err).to.exist;
+				done();
+			});
+		});
 	});
 });
