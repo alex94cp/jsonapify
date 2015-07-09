@@ -11,11 +11,11 @@ var Resource = require('../lib/resource');
 var Property = require('../lib/accessors/property');
 
 describe('Ref', function() {
-	var TestModel;
+	var testModel;
 	before(function(done) {
 		mongoose.connect('mongodb://localhost/test', function(err) {
 			if (err) return done(err)
-			TestModel = require('./testModel');
+			testModel = require('./testModel');
 			done();
 		});
 	});
@@ -32,12 +32,12 @@ describe('Ref', function() {
 	describe('#serialize', function() {
 		it('sets resource field from document', function(done) {
 			var response = new Response;
-			var resource = new Resource(TestModel, {
+			var resource = new Resource(testModel, {
 				id: new Property('_id'),
 				type: 'testmodels',
 			});
 			var ref = new Ref(resource, '_id');
-			var object = new TestModel;
+			var object = new testModel;
 			object.save(function(err) {
 				if (err) return done(err);
 				ref.serialize(object, response, function(err, resdata) {
@@ -62,9 +62,9 @@ describe('Ref', function() {
 	describe('#deserialize', function() {
 		it('sets document property from resource field', function(done) {
 			var output = {};
-			var linked = new TestModel;
+			var linked = new testModel;
 			var response = new Response;
-			var resource = new Resource(TestModel, {
+			var resource = new Resource(testModel, {
 				id: new Property('_id'),
 				type: 'testmodels',
 			});

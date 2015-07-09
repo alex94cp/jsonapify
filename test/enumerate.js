@@ -12,12 +12,12 @@ var jsonapify = require('../');
 var Resource = require('../lib/resource');
 
 describe('enumerate', function() {
-	var TestModel, resource;
+	var testModel, resource;
 	before(function(done) {
 		mongoose.connect('mongodb://localhost/test', function(err) {
 			if (err) return done(err);
-			TestModel = require('./testModel');
-			resource = new Resource(TestModel, {
+			testModel = require('./testModel');
+			resource = new Resource(testModel, {
 				type: 'testmodels',
 				id: jsonapify.property('_id'),
 			});
@@ -36,9 +36,9 @@ describe('enumerate', function() {
 	
 	it('sends back expected json-api response', function(done) {
 		async.parallel([
-			function(cb) { TestModel.create({}, cb); },
-			function(cb) { TestModel.create({}, cb); },
-			function(cb) { TestModel.create({}, cb); },
+			function(cb) { testModel.create({}, cb); },
+			function(cb) { testModel.create({}, cb); },
+			function(cb) { testModel.create({}, cb); },
 		], function(err, results) {
 			if (err) return done(err);
 			var req = httpMocks.createRequest();
@@ -64,12 +64,12 @@ describe('enumerate', function() {
 	
 	it('allows a subresource to be specified', function(done) {
 		async.parallel([
-			function(cb) { TestModel.create({ string: 'a' }, cb); },
-			function(cb) { TestModel.create({ string: 'a' }, cb); },
-			function(cb) { TestModel.create({ string: 'a' }, cb); },
-			function(cb) { TestModel.create({ string: 'b' }, cb); },
-			function(cb) { TestModel.create({ string: 'b' }, cb); },
-			function(cb) { TestModel.create({ string: 'c' }, cb); },
+			function(cb) { testModel.create({ string: 'a' }, cb); },
+			function(cb) { testModel.create({ string: 'a' }, cb); },
+			function(cb) { testModel.create({ string: 'a' }, cb); },
+			function(cb) { testModel.create({ string: 'b' }, cb); },
+			function(cb) { testModel.create({ string: 'b' }, cb); },
+			function(cb) { testModel.create({ string: 'c' }, cb); },
 		], function(err, results) {
 			if (err) return done(err);
 			var req = httpMocks.createRequest({ params: { id: results[0]._id }});

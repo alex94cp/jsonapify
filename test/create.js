@@ -12,12 +12,12 @@ var jsonapify = require('../');
 var Resource = require('../lib/resource');
 
 describe('create', function() {
-	var TestModel, resource;
+	var testModel, resource;
 	before(function(done) {
 		mongoose.connect('mongodb://localhost/test', function(err) {
 			if (err) return done(err);
-			TestModel = require('./testModel');
-			resource = new Resource(TestModel, {
+			testModel = require('./testModel');
+			resource = new Resource(testModel, {
 				type: 'testmodels',
 				id: {
 					value: jsonapify.property('_id'),
@@ -73,7 +73,7 @@ describe('create', function() {
 			var selfUrl = util.format('/testmodels/%s', resdata.data.id);
 			expect(resdata.data).to.have.deep.property('links.self', selfUrl);
 			expect(res.get('Location')).to.equal(selfUrl);
-			TestModel.findById(resdata.data.id, function(err, object) {
+			testModel.findById(resdata.data.id, function(err, object) {
 				if (err) return done(err);
 				expect(object).to.exist;
 				expect(object).to.have.property('string', expected.attributes.field);
@@ -83,7 +83,7 @@ describe('create', function() {
 	});
 	
 	it('allows a subresource to be specified', function(done) {
-		TestModel.create({ number: 1234 }, function(err, parent) {
+		testModel.create({ number: 1234 }, function(err, parent) {
 			if (err) return done(err);
 			var req = httpMocks.createRequest({
 				params: {
@@ -117,7 +117,7 @@ describe('create', function() {
 				var selfUrl = util.format('/testmodels/%s', resdata.data.id);
 				expect(resdata.data).to.have.deep.property('links.self', selfUrl);
 				expect(res.get('Location')).to.equal(selfUrl);
-				TestModel.findById(resdata.data.id, function(err, object) {
+				testModel.findById(resdata.data.id, function(err, object) {
 					if (err) return done(err);
 					expect(object).to.exist;
 					expect(object).to.have.property('number', parent.number);
