@@ -19,12 +19,18 @@ describe('create', function() {
 			TestModel = require('./testModel');
 			resource = new Resource(TestModel, {
 				type: 'testmodels',
-				id: jsonapify.field('_id'),
+				id: {
+					value: jsonapify.property('_id'),
+					writable: false,
+				},
 				links: {
-					self: jsonapify.template('/testmodels/{_id}'),
+					self: {
+						value: jsonapify.template('/testmodels/{_id}'),
+						writable: false,
+					},
 				},
 				attributes: {
-					field: jsonapify.field('string'),
+					field: jsonapify.property('string'),
 				},
 			});
 			done();
@@ -61,22 +67,23 @@ describe('create', function() {
 			expect(resdata.data.id).to.satisfy(function(id) {
 				return mongoose.Types.ObjectId.isValid(id);
 			});
-			expect(resdata.data).to.have.property('type', 'testmodels');
-			expect(resdata.data).to.have.deep.property('attributes.field', 'foo');
-			var expected = util.format('/testmodels/%s', resdata.data.id);
-			expect(resdata.data).to.have.deep.property('links.self', expected);
-			expect(res.get('Location')).to.equal(expected);
+			var expected = req.body.data;
+			expect(resdata.data).to.have.property('type', expected.type);
+			expect(resdata.data).to.have.deep.property('attributes.field', expected.attributes.field);
+			var selfUrl = util.format('/testmodels/%s', resdata.data.id);
+			expect(resdata.data).to.have.deep.property('links.self', selfUrl);
+			expect(res.get('Location')).to.equal(selfUrl);
 			TestModel.findById(resdata.data.id, function(err, object) {
 				if (err) return done(err);
 				expect(object).to.exist;
-				expect(object).to.have.property('string', 'foo');
+				expect(object).to.have.property('string', expected.attributes.field);
 				done();
 			});
 		});
 	});
 	
 	it('allows a subresource to be specified', function(done) {
-		TestModel.create({ string: 'foo'}, function(err, parent) {
+		TestModel.create({ number: 1234 }, function(err, parent) {
 			if (err) return done(err);
 			var req = httpMocks.createRequest({
 				params: {
@@ -85,13 +92,16 @@ describe('create', function() {
 				body: {
 					data: {
 						type: 'testmodels',
+						attributes: {
+							field: 'foo',
+						},
 					},
 				},
 			});
 			var res = httpMocks.createResponse();
 			jsonapify.create(
 				resource, jsonapify.param('id'),
-				resource, { string: jsonapify.parent('string') }
+				resource, { number: jsonapify.parent('number') }
 			)(req, res, function(err) {
 				if (err) return done(err);
 				expect(res.statusCode).to.equal(201);
@@ -101,15 +111,16 @@ describe('create', function() {
 				expect(resdata.data.id).to.satisfy(function(id) {
 					return mongoose.Types.ObjectId.isValid(id);
 				});
-				expect(resdata.data).to.have.property('type', 'testmodels');
-				expect(resdata.data).to.have.deep.property('attributes.field', parent.string);
-				var expected = util.format('/testmodels/%s', resdata.data.id);
-				expect(resdata.data).to.have.deep.property('links.self', expected);
-				expect(res.get('Location')).to.equal(expected);
+				var expected = req.body.data;
+				expect(resdata.data).to.have.property('type', expected.type);
+				expect(resdata.data).to.have.deep.property('attributes.field', expected.attributes.field);
+				var selfUrl = util.format('/testmodels/%s', resdata.data.id);
+				expect(resdata.data).to.have.deep.property('links.self', selfUrl);
+				expect(res.get('Location')).to.equal(selfUrl);
 				TestModel.findById(resdata.data.id, function(err, object) {
 					if (err) return done(err);
 					expect(object).to.exist;
-					expect(object).to.have.property('string', parent.string);
+					expect(object).to.have.property('number', parent.number);
 					done();
 				});
 			});

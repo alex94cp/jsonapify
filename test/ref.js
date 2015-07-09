@@ -5,10 +5,10 @@ var mongoose = require('mongoose');
 // var mockgoose = require('mockgoose');
 // mockgoose(mongoose);
 
+var Ref = require('../lib/accessors/ref');
 var Response = require('../lib/response');
 var Resource = require('../lib/resource');
-var Field = require('../lib/accessors/field');
-var Ref = require('../lib/accessors/ref');
+var Property = require('../lib/accessors/property');
 
 describe('Ref', function() {
 	var TestModel;
@@ -33,7 +33,7 @@ describe('Ref', function() {
 		it('sets resource field from document', function(done) {
 			var response = new Response;
 			var resource = new Resource(TestModel, {
-				id: new Field('_id'),
+				id: new Property('_id'),
 				type: 'testmodels',
 			});
 			var ref = new Ref(resource, '_id');
@@ -65,7 +65,7 @@ describe('Ref', function() {
 			var linked = new TestModel;
 			var response = new Response;
 			var resource = new Resource(TestModel, {
-				id: new Field('_id'),
+				id: new Property('_id'),
 				type: 'testmodels',
 			});
 			var resdata = {

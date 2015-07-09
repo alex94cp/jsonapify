@@ -19,7 +19,7 @@ describe('enumerate', function() {
 			TestModel = require('./testModel');
 			resource = new Resource(TestModel, {
 				type: 'testmodels',
-				id: jsonapify.field('_id'),
+				id: jsonapify.property('_id'),
 			});
 			done();
 		});

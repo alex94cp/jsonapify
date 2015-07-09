@@ -1,7 +1,9 @@
+var _ = require('lodash');
 var chai = require('chai');
 var sinon = require('sinon');
-chai.use(require('sinon-chai'));
+
 var expect = chai.expect;
+chai.use(require('sinon-chai'));
 
 var Resource = require('../lib/resource');
 var Response = require('../lib/response');
@@ -15,6 +17,16 @@ describe('Resource', function() {
 	var resource, serializer;
 	before(function() {
 		serializer = new TestSerializer;
+		sinon.stub(serializer, 'serialize',
+			function(resdata, response, cb) {
+				_.defer(cb, null, 'whatever');
+			}
+		);
+		sinon.stub(serializer, 'deserialize',
+			function(object, response, output, cb) {
+				_.defer(cb, null, output);
+			}
+		);
 		resource = new Resource(TestModel, {
 			simple: 'a',
 			complex: {
@@ -24,13 +36,16 @@ describe('Resource', function() {
 		});
 	});
 	
+	beforeEach(function() {
+		serializer.serialize.reset();
+		serializer.deserialize.reset();
+	});
+	
 	describe('#serialize', function() {
-		var response, object, mock;
+		var response, object;
 		before(function() {
 			object = new TestModel;
 			response = new Response;
-			mock = sinon.mock(serializer);
-			mock.expects('serialize').callsArgAsync(2).once();
 		});
 		
 		it('turns a document object into resource form', function(done) {
@@ -38,17 +53,15 @@ describe('Resource', function() {
 				if (err) return done(err);
 				expect(resdata).to.have.property('simple', 'a');
 				expect(resdata).to.have.deep.property('complex.inner', 'b');
-				mock.verify();
+				expect(serializer.serialize).to.have.been.called.once;
 				done();
 			});
 		});
 	});
 	
 	describe('#deserialize', function() {
-		var response, mock;
+		var response;
 		before(function() {
-			mock = sinon.mock(serializer);
-			mock.expects('deserialize').callsArgAsync(3).once();
 			response = new Response();
 		});
 		
@@ -63,7 +76,7 @@ describe('Resource', function() {
 			var output = {};
 			resource.deserialize(resdata, response, output, function(err) {
 				if (err) return done(err);
-				mock.verify();
+				expect(serializer.deserialize).to.have.been.called.once;
 				done();
 			});
 		});
@@ -74,6 +87,7 @@ describe('Resource', function() {
 				complex: {
 					inner: 'invalid',
 				},
+				serializable: 'whatever',
 			};
 			var output = {};
 			resource.deserialize(resdata, response, output, function(err) {
