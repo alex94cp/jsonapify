@@ -1,5 +1,7 @@
 # jsonapify
 
+[![Build Status](https://travis-ci.org/alex94puchades/jsonapify.svg?branch=master)](https://travis-ci.org/alex94puchades/jsonapify)
+
 Middleware for easy development of JSON-API compatible APIs
 
 ## Install
