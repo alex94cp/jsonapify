@@ -33,7 +33,10 @@ var userResource = new jsonapify.resource(User, {
 	},
 	attributes: {
 		email: jsonapify.property('email'),
-		password: jsonapify.property('password', { readable: false }),
+		password: {
+			value: jsonapify.property('password'),
+			readable: false,
+		},
 	},
 	relationships: {
 		role: jsonapify.ref(roleResource, 'role'),
