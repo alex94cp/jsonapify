@@ -30,12 +30,16 @@ describe('Ref', function() {
 	});
 	
 	describe('#serialize', function() {
-		it('sets resource field from document', function(done) {
-			var response = new Response;
-			var resource = new Resource(testModel, {
+		var resource, response;
+		beforeEach(function() {
+			response = new Response;
+			resource = new Resource(testModel, {
 				id: new Property('_id'),
 				type: 'testmodels',
 			});
+		});
+		
+		it('sets resource field from document', function(done) {
 			var ref = new Ref(resource, '_id');
 			var object = new testModel;
 			object.save(function(err) {
@@ -53,6 +57,54 @@ describe('Ref', function() {
 					expect(include.id).to.satisfy(function(id) {
 						return id.equals(object._id);
 					});
+					done();
+				});
+			});
+		});
+		
+		it('sets meta object in response', function(done) {
+			var ref = new Ref(resource, '_id', { meta: { name: 'value' }});
+			var object = new testModel;
+			object.save(function(err) {
+				if (err) return done(err);
+				ref.serialize(object, response, function(err, resdata) {
+					if (err) return done(err);
+					expect(resdata).to.have.deep.property('data.id');
+					expect(resdata).to.have.deep.property('data.type', 'testmodels');
+					expect(resdata.data.id).to.satisfy(function(id) {
+						return id.equals(object._id);
+					});
+					var include = response.include('testmodels', object._id);
+					expect(include).to.have.property('id');
+					expect(include).to.have.property('type', 'testmodels');
+					expect(include.id).to.satisfy(function(id) {
+						return id.equals(object._id);
+					});
+					expect(resdata).to.have.deep.property('meta.name', 'value');
+					done();
+				});
+			});
+		});
+		
+		it('sets links object in response', function(done) {
+			var ref = new Ref(resource, '_id', { links: { name: 'value' }});
+			var object = new testModel;
+			object.save(function(err) {
+				if (err) return done(err);
+				ref.serialize(object, response, function(err, resdata) {
+					if (err) return done(err);
+					expect(resdata).to.have.deep.property('data.id');
+					expect(resdata).to.have.deep.property('data.type', 'testmodels');
+					expect(resdata.data.id).to.satisfy(function(id) {
+						return id.equals(object._id);
+					});
+					var include = response.include('testmodels', object._id);
+					expect(include).to.have.property('id');
+					expect(include).to.have.property('type', 'testmodels');
+					expect(include.id).to.satisfy(function(id) {
+						return id.equals(object._id);
+					});
+					expect(resdata).to.have.deep.property('links.name', 'value');
 					done();
 				});
 			});
