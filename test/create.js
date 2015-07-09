@@ -14,7 +14,7 @@ var Resource = require('../lib/resource');
 describe('create', function() {
 	var TestModel, resource;
 	before(function(done) {
-		mongoose.connect('mongodb://localhost/test-create', function(err) {
+		mongoose.connect('mongodb://localhost/test', function(err) {
 			if (err) return done(err);
 			TestModel = require('./testModel');
 			resource = new Resource(TestModel, {
@@ -37,9 +37,9 @@ describe('create', function() {
 		});
 	});
 	
-	beforeEach(function() {
+	beforeEach(function(done) {
 		// mockgoose.reset();
-		mongoose.connection.db.dropDatabase();
+		mongoose.connection.db.dropDatabase(done);
 	});
 	
 	after(function(done) {

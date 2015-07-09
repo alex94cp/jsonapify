@@ -13,7 +13,7 @@ var Resource = require('../lib/resource');
 describe('read', function() {
 	var TestModel, resource;
 	before(function(done) {
-		mongoose.connect('mongodb://localhost/test-read', function(err) {
+		mongoose.connect('mongodb://localhost/test', function(err) {
 			if (err) return done(err);
 			TestModel = require('./testModel');
 			resource = new Resource(TestModel, {
@@ -24,9 +24,9 @@ describe('read', function() {
 		});
 	});
 	
-	beforeEach(function() {
+	beforeEach(function(done) {
 		// mockgoose.reset();
-		mongoose.connection.db.dropDatabase();
+		mongoose.connection.db.dropDatabase(done);
 	});
 	
 	after(function(done) {

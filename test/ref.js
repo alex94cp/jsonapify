@@ -13,16 +13,16 @@ var Property = require('../lib/accessors/property');
 describe('Ref', function() {
 	var TestModel;
 	before(function(done) {
-		mongoose.connect('mongodb://localhost/test-ref', function(err) {
+		mongoose.connect('mongodb://localhost/test', function(err) {
 			if (err) return done(err)
 			TestModel = require('./testModel');
 			done();
 		});
 	});
 	
-	beforeEach(function() {
+	beforeEach(function(done) {
 		// mockgoose.reset();
-		mongoose.connection.db.dropDatabase();
+		mongoose.connection.db.dropDatabase(done);
 	});
 	
 	after(function(done) {
