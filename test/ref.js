@@ -69,17 +69,6 @@ describe('Ref', function() {
 				if (err) return done(err);
 				ref.serialize(object, response, function(err, resdata) {
 					if (err) return done(err);
-					expect(resdata).to.have.deep.property('data.id');
-					expect(resdata).to.have.deep.property('data.type', 'testmodels');
-					expect(resdata.data.id).to.satisfy(function(id) {
-						return id.equals(object._id);
-					});
-					var include = response.include('testmodels', object._id);
-					expect(include).to.have.property('id');
-					expect(include).to.have.property('type', 'testmodels');
-					expect(include.id).to.satisfy(function(id) {
-						return id.equals(object._id);
-					});
 					expect(resdata).to.have.deep.property('meta.name', 'value');
 					done();
 				});
@@ -93,17 +82,6 @@ describe('Ref', function() {
 				if (err) return done(err);
 				ref.serialize(object, response, function(err, resdata) {
 					if (err) return done(err);
-					expect(resdata).to.have.deep.property('data.id');
-					expect(resdata).to.have.deep.property('data.type', 'testmodels');
-					expect(resdata.data.id).to.satisfy(function(id) {
-						return id.equals(object._id);
-					});
-					var include = response.include('testmodels', object._id);
-					expect(include).to.have.property('id');
-					expect(include).to.have.property('type', 'testmodels');
-					expect(include.id).to.satisfy(function(id) {
-						return id.equals(object._id);
-					});
 					expect(resdata).to.have.deep.property('links.name', 'value');
 					done();
 				});
@@ -112,10 +90,14 @@ describe('Ref', function() {
 	});
 	
 	describe('#deserialize', function() {
+		var linked, output, response;
+		before(function() {
+			output = {};
+			linked = new testModel;
+			response = new Response;
+		});
+		
 		it('sets document property from resource field', function(done) {
-			var output = {};
-			var linked = new testModel;
-			var response = new Response;
 			var resource = new Resource(testModel, {
 				id: new Property('_id'),
 				type: 'testmodels',

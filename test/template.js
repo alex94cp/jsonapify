@@ -11,13 +11,12 @@ var Template = require('../lib/accessors/template');
 describe('Template', function() {
 	describe('#serialize', function() {
 		it('sets resource field according to template', function(done) {
-			var output = {};
 			var object = new TestModel;
 			var response = new Response;
 			var template = new Template('/testmodels/{_id}');
+			var expected = util.format('/testmodels/%s', object._id);
 			template.serialize(object, response, function(err, value) {
 				if (err) return done(err);
-				var expected = util.format('/testmodels/%s', object._id);
 				expect(value).to.equal(expected);
 				done();
 			});
@@ -31,7 +30,11 @@ describe('Template', function() {
 			var id = mongoose.Types.ObjectId();
 			var selfUrl = util.format('/testmodels/%s', id);
 			var template = new Template('/testmodels/{_id}');
-			template.deserialize(selfUrl, response, output, done);
+			template.deserialize(selfUrl, response, output, function(err) {
+				if (err) return done(err);
+				expect(output).to.be.empty;
+				done();
+			});
 		});
 	});
 });

@@ -12,7 +12,7 @@ var jsonapify = require('../');
 var Resource = require('../lib/resource');
 
 describe('create', function() {
-	var testModel, resource;
+	var testModel, resource, res;
 	before(function(done) {
 		mongoose.connect('mongodb://localhost/test', function(err) {
 			if (err) return done(err);
@@ -40,6 +40,7 @@ describe('create', function() {
 	beforeEach(function(done) {
 		// mockgoose.reset();
 		mongoose.connection.db.dropDatabase(done);
+		res = httpMocks.createResponse();
 	});
 	
 	after(function(done) {
@@ -57,7 +58,6 @@ describe('create', function() {
 				},
 			},
 		});
-		var res = httpMocks.createResponse();
 		jsonapify.create(resource)(req, res, function(err) {
 			if (err) return done(err);
 			expect(res.statusCode).to.equal(201);
@@ -72,13 +72,34 @@ describe('create', function() {
 			expect(resdata.data).to.have.deep.property('attributes.field', expected.attributes.field);
 			var selfUrl = util.format('/testmodels/%s', resdata.data.id);
 			expect(resdata.data).to.have.deep.property('links.self', selfUrl);
-			expect(res.get('Location')).to.equal(selfUrl);
 			testModel.findById(resdata.data.id, function(err, object) {
 				if (err) return done(err);
 				expect(object).to.exist;
 				expect(object).to.have.property('string', expected.attributes.field);
 				done();
 			});
+		});
+	});
+	
+	it('sets Location HTTP header if resource has self link', function(done) {
+		var req = httpMocks.createRequest({
+			body: {
+				data: {
+					type: 'testmodels',
+					attributes: {
+						field: 'foo',
+					},
+				},
+			},
+		});
+		jsonapify.create(resource)(req, res, function(err) {
+			if (err) return done(err);
+			expect(res.statusCode).to.equal(201);
+			var resdata = JSON.parse(res._getData());
+			var selfUrl = util.format('/testmodels/%s', resdata.data.id);
+			expect(resdata.data).to.have.deep.property('links.self', selfUrl);
+			expect(res.get('Location')).to.equal(selfUrl);
+			done();
 		});
 	});
 	
@@ -98,7 +119,6 @@ describe('create', function() {
 					},
 				},
 			});
-			var res = httpMocks.createResponse();
 			jsonapify.create(
 				resource, jsonapify.param('id'),
 				resource, { number: jsonapify.parent('number') }
@@ -138,7 +158,6 @@ describe('create', function() {
 				},
 			},
 		});
-		var res = httpMocks.createResponse();
 		jsonapify.create(resource, { noWait: true })(req, res, function(err) {
 			if (err) return done(err);
 			expect(res.statusCode).to.equal(202);
