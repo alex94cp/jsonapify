@@ -14,7 +14,7 @@ TestSerializer.prototype.serialize = function() {};
 TestSerializer.prototype.deserialize = function() {};
 
 describe('Resource', function() {
-	var resource, serializer;
+	var resource, expected, serializer;
 	before(function() {
 		serializer = new TestSerializer;
 		sinon.stub(serializer, 'serialize',
@@ -27,18 +27,48 @@ describe('Resource', function() {
 				_.defer(cb, null, output);
 			}
 		);
-		resource = new Resource(TestModel, {
+		expected = {
 			simple: 'a',
 			complex: {
 				inner: 'b',
 			},
 			serializable: serializer,
-		});
+		}
+		resource = new Resource(TestModel, expected);
 	});
 	
 	beforeEach(function() {
 		serializer.serialize.reset();
 		serializer.deserialize.reset();
+	});
+	
+	describe('#model', function() {
+		it('gives resource associated model', function() {
+			expect(resource).to.have.property('model', TestModel);
+		});
+	});
+	
+	describe('#field', function(done) {
+		it('returns resource field by name', function() {
+			var inner = resource.field('complex.inner');
+			expect(inner).to.exist.and.have.property('name', 'complex.inner');
+			var object = {}, response = new Response;
+			inner.serialize(object, response, function(err, value) {
+				expect(err).to.not.exist;
+				expect(value).to.equal(expected.complex.inner);
+				done();
+			});
+		});
+	});
+	
+	describe('#select', function() {
+		it('returns a resource view with only selected fields', function() {
+			var resview = resource.select('simple');
+			var simple = resview.field('simple');
+			expect(simple).to.exist.and.have.property('name', 'simple');
+			var inner = resview.field('complex.inner');
+			expect(inner).to.not.exist;
+		});
 	});
 	
 	describe('#serialize', function() {
@@ -67,9 +97,9 @@ describe('Resource', function() {
 		
 		it('turns resource data into a document object', function(done) {
 			var resdata = {
-				simple: 'a',
+				simple: expected.simple,
 				complex: {
-					inner: 'b',
+					inner: expected.complex.inner,
 				},
 				serializable: 'c',
 			};
