@@ -35,7 +35,7 @@ describe('Ref', function() {
 			response = new Response;
 			resource = new Resource(testModel, {
 				id: new Property('_id'),
-				type: 'testmodels',
+				type: 'test-models',
 			});
 		});
 		
@@ -46,14 +46,15 @@ describe('Ref', function() {
 				if (err) return done(err);
 				ref.serialize(object, response, function(err, resdata) {
 					if (err) return done(err);
-					expect(resdata).to.have.deep.property('data.id');
-					expect(resdata).to.have.deep.property('data.type', 'testmodels');
+					expect(resdata).to.have.property('data');
+					expect(resdata.data).to.have.property('id');
+					expect(resdata.data).to.have.property('type', 'test-models');
 					expect(resdata.data.id).to.satisfy(function(id) {
 						return id.equals(object._id);
 					});
-					var include = response.include('testmodels', object._id);
+					var include = response.include('test-models', object._id);
 					expect(include).to.have.property('id');
-					expect(include).to.have.property('type', 'testmodels');
+					expect(include).to.have.property('type', 'test-models');
 					expect(include.id).to.satisfy(function(id) {
 						return id.equals(object._id);
 					});
@@ -100,12 +101,12 @@ describe('Ref', function() {
 		it('sets document property from resource field', function(done) {
 			var resource = new Resource(testModel, {
 				id: new Property('_id'),
-				type: 'testmodels',
+				type: 'test-models',
 			});
 			var resdata = {
 				data: {
 					id: linked._id,
-					type: 'testmodels',
+					type: 'test-models',
 				},
 			};
 			var ref = new Ref(resource, '_id');

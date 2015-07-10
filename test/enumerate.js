@@ -18,7 +18,7 @@ describe('enumerate', function() {
 			if (err) return done(err);
 			testModel = require('./testModel');
 			resource = new Resource(testModel, {
-				type: 'testmodels',
+				type: 'test-models',
 				id: jsonapify.property('_id'),
 			});
 			done();

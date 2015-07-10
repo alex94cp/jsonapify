@@ -17,7 +17,7 @@ describe('update', function() {
 			if (err) return done(err);
 			testModel = require('./testModel');
 			resource = new Resource(testModel, {
-				type: 'testmodels',
+				type: 'test-models',
 				id: {
 					value: jsonapify.property('_id'),
 					writable: false,
@@ -55,7 +55,7 @@ describe('update', function() {
 				},
 				body: {
 					data: {
-						type: 'testmodels',
+						type: 'test-models',
 						attributes: {
 							field: 'bar',
 						},
@@ -96,7 +96,7 @@ describe('update', function() {
 				},
 				body: {
 					data: {
-						type: 'testmodels',
+						type: 'test-models',
 						attributes: {
 							field: 'bar',
 						},
@@ -136,7 +136,7 @@ describe('update', function() {
 			},
 			body: {
 				data: {
-					type: 'testmodels',
+					type: 'test-models',
 					attributes: {
 						field: 'bar',
 					},

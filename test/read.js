@@ -17,7 +17,7 @@ describe('read', function() {
 			if (err) return done(err);
 			TestModel = require('./testModel');
 			resource = new Resource(TestModel, {
-				type: 'testmodels',
+				type: 'test-models',
 				id: jsonapify.property('_id'),
 			});
 			done();
@@ -52,7 +52,7 @@ describe('read', function() {
 				var resdata = JSON.parse(res._getData());
 				expect(resdata).to.have.property('data');
 				expect(resdata.data).to.have.property('id');
-				expect(resdata.data).to.have.property('type', 'testmodels');
+				expect(resdata.data).to.have.property('type', 'test-models');
 				expect(resdata.data.id).to.satisfy(function(id) {
 					return object._id.equals(id);
 				});
@@ -83,7 +83,7 @@ describe('read', function() {
 				var resdata = JSON.parse(res._getData());
 				expect(resdata).to.have.property('data');
 				expect(resdata.data).to.have.property('id');
-				expect(resdata.data).to.have.property('type', 'testmodels');
+				expect(resdata.data).to.have.property('type', 'test-models');
 				expect(resdata.data.id).to.satisfy(function(id) {
 					return object._id.equals(id);
 				});
