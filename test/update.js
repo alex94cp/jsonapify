@@ -49,8 +49,9 @@ describe('update', function() {
 		testModel.create({ string: 'foo' }, function(err, object) {
 			if (err) return done(err);
 			var req = httpMocks.createRequest({
-				params: {
-					id: object._id,
+				headers: {
+					'Content-Type': 'application/vnd.api+json',
+					'Accept': 'application/vnd.api+json',
 				},
 				body: {
 					data: {
@@ -59,6 +60,9 @@ describe('update', function() {
 							field: 'bar',
 						},
 					},
+				},
+				params: {
+					id: object._id,
 				},
 			});
 			var res = httpMocks.createResponse();
@@ -86,8 +90,9 @@ describe('update', function() {
 		testModel.create({ string: 'foo' }, function(err, object) {
 			if (err) return done(err);
 			var req = httpMocks.createRequest({
-				params: {
-					id: object._id,
+				headers: {
+					'Content-Type': 'application/vnd.api+json',
+					'Accept': 'application/vnd.api+json',
 				},
 				body: {
 					data: {
@@ -96,6 +101,9 @@ describe('update', function() {
 							field: 'bar',
 						},
 					},
+				},
+				params: {
+					id: object._id,
 				},
 			});
 			var res = httpMocks.createResponse();
@@ -122,8 +130,9 @@ describe('update', function() {
 	
 	it('sends null if resource not found', function(done) {
 		var req = httpMocks.createRequest({
-			params: {
-				id: mongoose.Types.ObjectId(),
+			headers: {
+				'Content-Type': 'application/vnd.api+json',
+				'Accept': 'application/vnd.api+json',
 			},
 			body: {
 				data: {
@@ -132,6 +141,9 @@ describe('update', function() {
 						field: 'bar',
 					},
 				},
+			},
+			params: {
+				id: mongoose.Types.ObjectId(),
 			},
 		});
 		var res = httpMocks.createResponse();

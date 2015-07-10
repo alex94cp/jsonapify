@@ -36,7 +36,15 @@ describe('read', function() {
 	it('sends back expected json-api response', function(done) {
 		TestModel.create({}, function(err, object) {
 			if (err) return done(err);
-			var req = httpMocks.createRequest({ params: { id: object._id }});
+			var req = httpMocks.createRequest({
+				headers: {
+					'Content-Type': 'application/vnd.api+json',
+					'Accept': 'application/vnd.api+json',
+				},
+				params: {
+					id: object._id
+				},
+			});
 			var res = httpMocks.createResponse();
 			jsonapify.read(resource, jsonapify.param('id'))(req, res, function(err) {
 				if (err) return done(err);
@@ -56,7 +64,15 @@ describe('read', function() {
 	it('allows a subresource to be specified', function(done) {
 		TestModel.create({ string: 'foo' }, function(err, object) {
 			if (err) return done(err);
-			var req = httpMocks.createRequest({ params: { id: object._id }});
+			var req = httpMocks.createRequest({
+				headers: {
+					'Content-Type': 'application/vnd.api+json',
+					'Accept': 'application/vnd.api+json',
+				},
+				params: {
+					id: object._id,
+				},
+			});
 			var res = httpMocks.createResponse();
 			jsonapify.read(
 				resource, jsonapify.param('id'),
@@ -77,8 +93,15 @@ describe('read', function() {
 	});
 	
 	it('sends null if resource not found', function(done) {
-		var oid = mongoose.Types.ObjectId();
-		var req = httpMocks.createRequest({ params: { id: oid }});
+		var req = httpMocks.createRequest({
+			headers: {
+				'Content-Type': 'application/vnd.api+json',
+				'Accept': 'application/vnd.api+json',
+			},
+			params: {
+				id: mongoose.Types.ObjectId(),
+			},
+		});
 		var res = httpMocks.createResponse();
 		jsonapify.read(resource, jsonapify.param('id'))(req, res, function(err) {
 			if (err) return done(err);

@@ -41,7 +41,12 @@ describe('enumerate', function() {
 			function(cb) { testModel.create({}, cb); },
 		], function(err, results) {
 			if (err) return done(err);
-			var req = httpMocks.createRequest();
+			var req = httpMocks.createRequest({
+				headers: {
+					'Content-Type': 'application/vnd.api+json',
+					'Accept': 'application/vnd.api+json',
+				},
+			});
 			var res = httpMocks.createResponse();
 			jsonapify.enumerate(resource)(req, res, function(err) {
 				if (err) return done(err);
@@ -72,7 +77,15 @@ describe('enumerate', function() {
 			function(cb) { testModel.create({ string: 'c' }, cb); },
 		], function(err, results) {
 			if (err) return done(err);
-			var req = httpMocks.createRequest({ params: { id: results[0]._id }});
+			var req = httpMocks.createRequest({
+				headers: {
+					'Content-Type': 'application/vnd.api+json',
+					'Accept': 'application/vnd.api+json',
+				},
+				params: {
+					id: results[0]._id,
+				},
+			});
 			var res = httpMocks.createResponse();
 			jsonapify.enumerate(
 				resource, jsonapify.param('id'),
@@ -96,7 +109,12 @@ describe('enumerate', function() {
 	});
 	
 	it('sends empty array if no resources', function(done) {
-		var req = httpMocks.createRequest();
+		var req = httpMocks.createRequest({
+			headers: {
+				'Content-Type': 'application/vnd.api+json',
+				'Accept': 'application/vnd.api+json',
+			},
+		});
 		var res = httpMocks.createResponse();
 		jsonapify.enumerate(resource)(req, res, function(err) {
 			if (err) return done(err);

@@ -36,6 +36,8 @@
     "sinon-chai": "^2.8.0"
   },
   "dependencies": {
-    "lodash": "^3.10.0"
+    "lodash": "^3.10.0",
+    "negotiator": "^0.5.3",
+    "content-type": "^1.0.1"
   }
 }

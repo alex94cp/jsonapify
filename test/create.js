@@ -49,6 +49,10 @@ describe('create', function() {
 	
 	it('sends back created resource info', function(done) {
 		var req = httpMocks.createRequest({
+			headers: {
+				'Content-Type': 'application/vnd.api+json',
+				'Accept': 'application/vnd.api+json',
+			},
 			body: {
 				data: {
 					type: 'testmodels',
@@ -83,6 +87,10 @@ describe('create', function() {
 	
 	it('sets Location HTTP header if resource has self link', function(done) {
 		var req = httpMocks.createRequest({
+			headers: {
+				'Content-Type': 'application/vnd.api+json',
+				'Accept': 'application/vnd.api+json',
+			},
 			body: {
 				data: {
 					type: 'testmodels',
@@ -107,8 +115,9 @@ describe('create', function() {
 		testModel.create({ number: 1234 }, function(err, parent) {
 			if (err) return done(err);
 			var req = httpMocks.createRequest({
-				params: {
-					id: parent._id,
+				headers: {
+					'Content-Type': 'application/vnd.api+json',
+					'Accept': 'application/vnd.api+json',
 				},
 				body: {
 					data: {
@@ -117,6 +126,9 @@ describe('create', function() {
 							field: 'foo',
 						},
 					},
+				},
+				params: {
+					id: parent._id,
 				},
 			});
 			jsonapify.create(
@@ -149,6 +161,10 @@ describe('create', function() {
 	
 	it('sends back a 202 Accepted HTTP response if noWait is set', function(done) {
 		var req = httpMocks.createRequest({
+			headers: {
+				'Content-Type': 'application/vnd.api+json',
+				'Accept': 'application/vnd.api+json',
+			},
 			body: {
 				data: {
 					type: 'testmodels',
