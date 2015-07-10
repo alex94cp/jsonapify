@@ -11,7 +11,7 @@ var jsonapify = require('../');
 var Resource = require('../lib/resource');
 
 describe('update', function() {
-	var testModel, resource;
+	var testModel, resource, res;
 	before(function(done) {
 		mongoose.connect('mongodb://localhost/test', function(err) {
 			if (err) return done(err);
@@ -39,6 +39,7 @@ describe('update', function() {
 	beforeEach(function(done) {
 		// mockgoose.reset();
 		mongoose.connection.db.dropDatabase(done);
+		res = httpMocks.createResponse();
 	});
 	
 	after(function(done) {
@@ -65,7 +66,6 @@ describe('update', function() {
 					id: object._id,
 				},
 			});
-			var res = httpMocks.createResponse();
 			jsonapify.update(
 				resource, jsonapify.param('id')
 			)(req, res, function(err) {
@@ -106,7 +106,6 @@ describe('update', function() {
 					id: object._id,
 				},
 			});
-			var res = httpMocks.createResponse();
 			jsonapify.update(
 				resource, jsonapify.param('id'), { noWait: true }
 			)(req, res, function(err) {
@@ -141,7 +140,6 @@ describe('update', function() {
 					id: object._id,
 				},
 			});
-			var res = httpMocks.createResponse();
 			jsonapify.update(
 				resource, jsonapify.param('id'),
 				resource, { string: jsonapify.parent('string') }
@@ -181,7 +179,6 @@ describe('update', function() {
 				id: mongoose.Types.ObjectId(),
 			},
 		});
-		var res = httpMocks.createResponse();
 		jsonapify.update(resource, jsonapify.param('id'))(req, res, function(err) {
 			if (err) return done(err);
 			expect(res.statusCode).to.equal(404);
