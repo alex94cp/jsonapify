@@ -45,7 +45,7 @@ describe('update', function() {
 		mongoose.disconnect(done);
 	});
 	
-	it('sends back expected json-api response', function(done) {
+	it('updates existing resource and sends back resource info', function(done) {
 		testModel.create({ string: 'foo' }, function(err, object) {
 			if (err) return done(err);
 			var req = httpMocks.createRequest({
@@ -86,7 +86,42 @@ describe('update', function() {
 		});
 	});
 	
-	it('allows a subresource to be specified', function(done) {
+	it('updates resource and sends back 202 Accepted if noWait is set', function(done) {
+		testModel.create({ string: 'foo' }, function(err, object) {
+			if (err) return done(err);
+			var req = httpMocks.createRequest({
+				headers: {
+					'Content-Type': 'application/vnd.api+json',
+					'Accept': 'application/vnd.api+json',
+				},
+				body: {
+					data: {
+						type: 'test-models',
+						attributes: {
+							field: 'bar',
+						},
+					},
+				},
+				params: {
+					id: object._id,
+				},
+			});
+			var res = httpMocks.createResponse();
+			jsonapify.update(
+				resource, jsonapify.param('id'), { noWait: true }
+			)(req, res, function(err) {
+				if (err) return done(err);
+				var expected = req.body.data;
+				expect(res.statusCode).to.equal(202);
+				var resdata = JSON.parse(res._getData());
+				expect(resdata).to.have.property('data', null);
+				done();
+			});
+		});
+	});
+	
+	
+	it('updates existing subresource and sends back resource info', function(done) {
 		testModel.create({ string: 'foo' }, function(err, object) {
 			if (err) return done(err);
 			var req = httpMocks.createRequest({
@@ -128,7 +163,7 @@ describe('update', function() {
 		});
 	});
 	
-	it('sends null if resource not found', function(done) {
+	it('sends back 404 Not Found if resource not found', function(done) {
 		var req = httpMocks.createRequest({
 			headers: {
 				'Content-Type': 'application/vnd.api+json',
