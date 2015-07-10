@@ -33,7 +33,7 @@ describe('delete', function() {
 		mongoose.disconnect(done);
 	});
 	
-	it('sends back expected json-api response', function(done) {
+	it('deletes resource and sends back expected response', function(done) {
 		testModel.create({}, function(err, object) {
 			if (err) return done(err);
 			var req = httpMocks.createRequest({
@@ -62,7 +62,7 @@ describe('delete', function() {
 		});
 	});
 	
-	it('allows a subresource to be specified', function(done) {
+	it('deletes subresource and sends back expected response', function(done) {
 		testModel.create({ string: 'foo' }, function(err, object) {
 			if (err) return done(err);
 			var req = httpMocks.createRequest({
@@ -93,7 +93,7 @@ describe('delete', function() {
 		});
 	});
 	
-	it('sends HTTP error 404 if resource not found', function(done) {
+	it('sends back 404 Not Found response if resource not found', function(done) {
 		var req = httpMocks.createRequest({
 			headers: {
 				'Content-Type': 'application/vnd.api+json',

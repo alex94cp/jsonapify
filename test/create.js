@@ -47,7 +47,7 @@ describe('create', function() {
 		mongoose.disconnect(done);
 	});
 	
-	it('sends back created resource info', function(done) {
+	it('creates resource and sends back resource info', function(done) {
 		var req = httpMocks.createRequest({
 			headers: {
 				'Content-Type': 'application/vnd.api+json',
@@ -111,7 +111,7 @@ describe('create', function() {
 		});
 	});
 	
-	it('allows a subresource to be specified', function(done) {
+	it('creates a subresource and sends back resource info', function(done) {
 		testModel.create({ number: 1234 }, function(err, parent) {
 			if (err) return done(err);
 			var req = httpMocks.createRequest({
@@ -159,7 +159,7 @@ describe('create', function() {
 		});
 	});
 	
-	it('sends back a 202 Accepted HTTP response if noWait is set', function(done) {
+	it('creates resource and sends back 202 Accepted if noWait is set', function(done) {
 		var req = httpMocks.createRequest({
 			headers: {
 				'Content-Type': 'application/vnd.api+json',

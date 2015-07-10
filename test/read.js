@@ -33,7 +33,7 @@ describe('read', function() {
 		mongoose.disconnect(done);
 	});
 	
-	it('sends back expected json-api response', function(done) {
+	it('sends back resource info', function(done) {
 		TestModel.create({}, function(err, object) {
 			if (err) return done(err);
 			var req = httpMocks.createRequest({
@@ -61,7 +61,7 @@ describe('read', function() {
 		});
 	});
 	
-	it('allows a subresource to be specified', function(done) {
+	it('sends back subresource info', function(done) {
 		TestModel.create({ string: 'foo' }, function(err, object) {
 			if (err) return done(err);
 			var req = httpMocks.createRequest({
@@ -92,7 +92,7 @@ describe('read', function() {
 		});
 	});
 	
-	it('sends null if resource not found', function(done) {
+	it('sends back 404 Not Found if resource not found', function(done) {
 		var req = httpMocks.createRequest({
 			headers: {
 				'Content-Type': 'application/vnd.api+json',

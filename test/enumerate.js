@@ -34,7 +34,7 @@ describe('enumerate', function() {
 		mongoose.disconnect(done);
 	});
 	
-	it('sends back expected json-api response', function(done) {
+	it('lists resources and sends back resource info', function(done) {
 		async.parallel([
 			function(cb) { testModel.create({}, cb); },
 			function(cb) { testModel.create({}, cb); },
@@ -67,7 +67,7 @@ describe('enumerate', function() {
 		});
 	});
 	
-	it('allows a subresource to be specified', function(done) {
+	it('lists subresources and sends back resource info', function(done) {
 		async.parallel([
 			function(cb) { testModel.create({ string: 'a' }, cb); },
 			function(cb) { testModel.create({ string: 'a' }, cb); },
@@ -108,7 +108,7 @@ describe('enumerate', function() {
 		});
 	});
 	
-	it('sends empty array if no resources', function(done) {
+	it('sends back 200 OK response with empty array if no resources found', function(done) {
 		var req = httpMocks.createRequest({
 			headers: {
 				'Content-Type': 'application/vnd.api+json',

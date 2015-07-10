@@ -84,7 +84,7 @@ describe('assign', function() {
 		});
 	});
 	
-	it('creates resource and sends back a 202 Accepted HTTP response if noWait is set', function(done) {
+	it('creates resource and sends back 202 Accepted if noWait is set', function(done) {
 		var req = httpMocks.createRequest({
 			headers: {
 				'Content-Type': 'application/vnd.api+json',
@@ -158,7 +158,7 @@ describe('assign', function() {
 		});
 	});
 	
-	it('updates resource and sends back a 202 Accepted HTTP response if noWait is set', function(done) {
+	it('updates resource and sends back 202 Accepted if noWait is set', function(done) {
 		testModel.create({ number: 1234 }, function(err, object) {
 			if (err) return next(err);
 			var req = httpMocks.createRequest({
