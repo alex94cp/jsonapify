@@ -1,6 +1,5 @@
 var _ = require('lodash');
 var chai = require('chai');
-var common = require('./common');
 var httpMocks = require('node-mocks-http');
 var expect = chai.expect;
 
@@ -67,10 +66,7 @@ describe('update', function() {
 					id: object._id,
 				},
 			});
-			var update = common.joinMiddleware(jsonapify.update(
-				resource, jsonapify.param('id')
-			));
-			update(req, res, function(err) {
+			jsonapify.update(resource, jsonapify.param('id'))(req, res, function(err) {
 				if (err) return done(err);
 				var expected = req.body.data;
 				expect(res.statusCode).to.equal(200);
@@ -108,10 +104,9 @@ describe('update', function() {
 					id: object._id,
 				},
 			});
-			var update = common.joinMiddleware(jsonapify.update(
+			jsonapify.update(
 				resource, jsonapify.param('id'), { noWait: true }
-			));
-			update(req, res, function(err) {
+			)(req, res, function(err) {
 				if (err) return done(err);
 				var expected = req.body.data;
 				expect(res.statusCode).to.equal(202);
@@ -143,11 +138,10 @@ describe('update', function() {
 					id: object._id,
 				},
 			});
-			var update = common.joinMiddleware(jsonapify.update(
+			jsonapify.update(
 				resource, jsonapify.param('id'),
 				resource, { string: jsonapify.parent('string') }
-			));
-			update(req, res, function(err) {
+			)(req, res, function(err) {
 				if (err) return done(err);
 				var expected = req.body.data;
 				expect(res.statusCode).to.equal(200);
@@ -183,10 +177,7 @@ describe('update', function() {
 				id: mongoose.Types.ObjectId(),
 			},
 		});
-		var update = common.joinMiddleware(jsonapify.update(
-			resource, jsonapify.param('id')
-		));
-		update(req, res, function(err) {
+		jsonapify.update(resource, jsonapify.param('id'))(req, res, function(err) {
 			if (err) return done(err);
 			expect(res.statusCode).to.equal(404);
 			var resdata = JSON.parse(res._getData());

@@ -1,6 +1,5 @@
 var _ = require('lodash');
 var chai = require('chai');
-var common = require('./common');
 var httpMocks = require('node-mocks-http');
 var expect = chai.expect;
 
@@ -47,10 +46,7 @@ describe('read', function() {
 				},
 			});
 			var res = httpMocks.createResponse();
-			var read = common.joinMiddleware(jsonapify.read(
-				resource, jsonapify.param('id')
-			));
-			read(req, res, function(err) {
+			jsonapify.read(resource, jsonapify.param('id'))(req, res, function(err) {
 				if (err) return done(err);
 				expect(res.statusCode).to.equal(200);
 				var resdata = JSON.parse(res._getData());
@@ -78,11 +74,10 @@ describe('read', function() {
 				},
 			});
 			var res = httpMocks.createResponse();
-			var read = common.joinMiddleware(jsonapify.read(
+			jsonapify.read(
 				resource, jsonapify.param('id'),
 				resource, { string: jsonapify.parent('string') }
-			));
-			read(req, res, function(err) {
+			)(req, res, function(err) {
 				if (err) return done(err);
 				expect(res.statusCode).to.equal(200);
 				var resdata = JSON.parse(res._getData());
@@ -108,10 +103,7 @@ describe('read', function() {
 			},
 		});
 		var res = httpMocks.createResponse();
-		var read = common.joinMiddleware(jsonapify.read(
-			resource, jsonapify.param('id')
-		));
-		read(req, res, function(err) {
+		jsonapify.read(resource, jsonapify.param('id'))(req, res, function(err) {
 			if (err) return done(err);
 			expect(res.statusCode).to.equal(404);
 			var resdata = JSON.parse(res._getData());
