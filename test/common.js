@@ -14,8 +14,8 @@ function joinMiddleware(middleware) {
 		function invokeMiddleware(f, cb) {
 			f(req, res, function(err) {
 				if (!err) return cb(null);
-				var handlers = [async.constant(err)];
-				handlers.push.apply(errorHandlers);
+				var handlers = errorHandlers.slice();
+				handlers.unshift(async.constant(err));
 				async.waterfall(handlers, forwardError, cb);
 			});
 		}
