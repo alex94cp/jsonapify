@@ -1,6 +1,8 @@
 var _ = require('lodash');
 var util = require('util');
 var chai = require('chai');
+var common = require('./common');
+
 var httpMocks = require('node-mocks-http');
 var expect = chai.expect;
 
@@ -62,7 +64,8 @@ describe('create', function() {
 				},
 			},
 		});
-		jsonapify.create(resource)(req, res, function(err) {
+		var create = common.joinMiddleware(jsonapify.create(resource));
+		create(req, res, function(err) {
 			if (err) return done(err);
 			expect(res.statusCode).to.equal(201);
 			var resdata = JSON.parse(res._getData());
@@ -100,7 +103,8 @@ describe('create', function() {
 				},
 			},
 		});
-		jsonapify.create(resource)(req, res, function(err) {
+		var create = common.joinMiddleware(jsonapify.create(resource));
+		create(req, res, function(err) {
 			if (err) return done(err);
 			expect(res.statusCode).to.equal(201);
 			var resdata = JSON.parse(res._getData());
@@ -131,10 +135,11 @@ describe('create', function() {
 					id: parent._id,
 				},
 			});
-			jsonapify.create(
+			var create = common.joinMiddleware(jsonapify.create(
 				resource, jsonapify.param('id'),
 				resource, { number: jsonapify.parent('number') }
-			)(req, res, function(err) {
+			));
+			create(req, res, function(err) {
 				if (err) return done(err);
 				expect(res.statusCode).to.equal(201);
 				var resdata = JSON.parse(res._getData());
@@ -174,7 +179,10 @@ describe('create', function() {
 				},
 			},
 		});
-		jsonapify.create(resource, { noWait: true })(req, res, function(err) {
+		var create = common.joinMiddleware(jsonapify.create(
+			resource, { noWait: true }
+		));
+		create(req, res, function(err) {
 			if (err) return done(err);
 			expect(res.statusCode).to.equal(202);
 			var resdata = JSON.parse(res._getData());

@@ -1,6 +1,7 @@
 var _ = require('lodash');
 var chai = require('chai');
 var async = require('async');
+var common = require('./common');
 var httpMocks = require('node-mocks-http');
 var expect = chai.expect;
 
@@ -48,7 +49,8 @@ describe('enumerate', function() {
 				},
 			});
 			var res = httpMocks.createResponse();
-			jsonapify.enumerate(resource)(req, res, function(err) {
+			var enumerate = common.joinMiddleware(jsonapify.enumerate(resource));
+			enumerate(req, res, function(err) {
 				if (err) return done(err);
 				var count = results.length;
 				expect(res.statusCode).to.equal(200);
@@ -87,10 +89,11 @@ describe('enumerate', function() {
 				},
 			});
 			var res = httpMocks.createResponse();
-			jsonapify.enumerate(
+			var enumerate = common.joinMiddleware(jsonapify.enumerate(
 				resource, jsonapify.param('id'),
 				resource, { string: jsonapify.parent('string') }
-			)(req, res, function(err) {
+			));
+			enumerate(req, res, function(err) {
 				if (err) return done(err);
 				expect(res.statusCode).to.equal(200);
 				var resdata = JSON.parse(res._getData());
@@ -116,7 +119,8 @@ describe('enumerate', function() {
 			},
 		});
 		var res = httpMocks.createResponse();
-		jsonapify.enumerate(resource)(req, res, function(err) {
+		var enumerate = common.joinMiddleware(jsonapify.enumerate(resource));
+		enumerate(req, res, function(err) {
 			if (err) return done(err);
 			expect(res.statusCode).to.equal(200);
 			var resdata = JSON.parse(res._getData());

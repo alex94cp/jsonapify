@@ -1,5 +1,6 @@
 var _ = require('lodash');
 var chai = require('chai');
+var common = require('./common');
 var httpMocks = require('node-mocks-http');
 var expect = chai.expect;
 
@@ -46,9 +47,10 @@ describe('delete', function() {
 				},
 			});
 			var res = httpMocks.createResponse();
-			jsonapify.delete(
+			var _delete = common.joinMiddleware(jsonapify.delete(
 				resource, jsonapify.param('id')
-			)(req, res, function(err) {
+			));
+			_delete(req, res, function(err) {
 				if (err) return done(err);
 				expect(res.statusCode).to.equal(204);
 				var resdata = JSON.parse(res._getData());
@@ -75,20 +77,20 @@ describe('delete', function() {
 				},
 			});
 			var res = httpMocks.createResponse();
-			jsonapify.read(
+			var _delete = common.joinMiddleware(jsonapify.delete(
 				resource, jsonapify.param('id'),
 				resource, { string: jsonapify.parent('string') }
-			)(req, res, function(err) {
+			));
+			_delete(req, res, function(err) {
 				if (err) return done(err);
-				expect(res.statusCode).to.equal(200);
+				expect(res.statusCode).to.equal(204);
 				var resdata = JSON.parse(res._getData());
-				expect(resdata).to.have.property('data');
-				expect(resdata.data).to.have.property('id');
-				expect(resdata.data).to.have.property('type', 'test-models');
-				expect(resdata.data.id).to.satisfy(function(id) {
-					return object._id.equals(id);
+				expect(resdata).to.have.property('data', null);
+				testModel.findById(object._id, function(err, result) {
+					if (err) return done(err);
+					expect(result).to.not.exist;
+					done();
 				});
-				done();
 			});
 		});
 	});
@@ -104,7 +106,10 @@ describe('delete', function() {
 			},
 		});
 		var res = httpMocks.createResponse();
-		jsonapify.delete(resource, jsonapify.param('id'))(req, res, function(err) {
+		var _delete = common.joinMiddleware(jsonapify.delete(
+			resource, jsonapify.param('id')
+		));
+		_delete(req, res, function(err) {
 			if (err) return done(err);
 			expect(res.statusCode).to.equal(404);
 			var resdata = JSON.parse(res._getData());

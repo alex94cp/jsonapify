@@ -1,6 +1,8 @@
 var _ = require('lodash');
 var util = require('util');
 var chai = require('chai');
+var common = require('./common');
+
 var httpMocks = require('node-mocks-http');
 var expect = chai.expect;
 
@@ -62,9 +64,10 @@ describe('assign', function() {
 				id: 1234,
 			},
 		});
-		jsonapify.assign(
+		var assign = common.joinMiddleware(jsonapify.assign(
 			resource, { number: jsonapify.param('id') }
-		)(req, res, function(err) {
+		));
+		assign(req, res, function(err) {
 			if (err) return done(err);
 			expect(res.statusCode).to.equal(201);
 			var resdata = JSON.parse(res._getData());
@@ -103,9 +106,10 @@ describe('assign', function() {
 				id: 1234,
 			},
 		});
-		jsonapify.assign(
+		var assign = common.joinMiddleware(jsonapify.assign(
 			resource, { number: jsonapify.param('id') }, { noWait: true }
-		)(req, res, function(err) {
+		));
+		assign(req, res, function(err) {
 			if (err) return done(err);
 			expect(res.statusCode).to.equal(202);
 			var resdata = JSON.parse(res._getData());
@@ -135,9 +139,10 @@ describe('assign', function() {
 					id: 1234,
 				},
 			});
-			jsonapify.assign(
+			var assign = common.joinMiddleware(jsonapify.assign(
 				resource, { number: jsonapify.param('id') }
-			)(req, res, function(err) {
+			));
+			assign(req, res, function(err) {
 				if (err) return done(err);
 				expect(res.statusCode).to.equal(200);
 				var resdata = JSON.parse(res._getData());
@@ -179,9 +184,12 @@ describe('assign', function() {
 					id: 1234,
 				},
 			});
-			jsonapify.assign(
-				resource, { number: jsonapify.param('id') }, { noWait: true }
-			)(req, res, function(err) {
+			var assign = common.joinMiddleware(
+				jsonapify.assign(resource, { number: jsonapify.param('id') }, {
+					noWait: true
+				})
+			);
+			assign(req, res, function(err) {
 				if (err) return done(err);
 				expect(res.statusCode).to.equal(202);
 				var resdata = JSON.parse(res._getData());

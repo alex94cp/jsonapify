@@ -1,5 +1,6 @@
 var _ = require('lodash');
 var chai = require('chai');
+var common = require('./common');
 var httpMocks = require('node-mocks-http');
 var expect = chai.expect;
 
@@ -66,9 +67,10 @@ describe('update', function() {
 					id: object._id,
 				},
 			});
-			jsonapify.update(
+			var update = common.joinMiddleware(jsonapify.update(
 				resource, jsonapify.param('id')
-			)(req, res, function(err) {
+			));
+			update(req, res, function(err) {
 				if (err) return done(err);
 				var expected = req.body.data;
 				expect(res.statusCode).to.equal(200);
@@ -106,9 +108,10 @@ describe('update', function() {
 					id: object._id,
 				},
 			});
-			jsonapify.update(
+			var update = common.joinMiddleware(jsonapify.update(
 				resource, jsonapify.param('id'), { noWait: true }
-			)(req, res, function(err) {
+			));
+			update(req, res, function(err) {
 				if (err) return done(err);
 				var expected = req.body.data;
 				expect(res.statusCode).to.equal(202);
@@ -140,10 +143,11 @@ describe('update', function() {
 					id: object._id,
 				},
 			});
-			jsonapify.update(
+			var update = common.joinMiddleware(jsonapify.update(
 				resource, jsonapify.param('id'),
 				resource, { string: jsonapify.parent('string') }
-			)(req, res, function(err) {
+			));
+			update(req, res, function(err) {
 				if (err) return done(err);
 				var expected = req.body.data;
 				expect(res.statusCode).to.equal(200);
@@ -179,7 +183,10 @@ describe('update', function() {
 				id: mongoose.Types.ObjectId(),
 			},
 		});
-		jsonapify.update(resource, jsonapify.param('id'))(req, res, function(err) {
+		var update = common.joinMiddleware(jsonapify.update(
+			resource, jsonapify.param('id')
+		));
+		update(req, res, function(err) {
 			if (err) return done(err);
 			expect(res.statusCode).to.equal(404);
 			var resdata = JSON.parse(res._getData());
