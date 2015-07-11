@@ -151,4 +151,21 @@ describe('Response', function() {
 			expect(includes).to.deep.equal(expected);
 		});
 	});
+	
+	describe('#toJSON', function() {
+		it('adds jsonapi info', function() {
+			response.data('data');
+			var data = response.toJSON();
+			expect(data).to.have.property('jsonapi');
+			expect(data.jsonapi).to.have.property('version', '1.0');
+		});
+		
+		it('omits data in response in the presence of errors', function() {
+			response.data('data');
+			response.error('error');
+			var data = response.toJSON();
+			expect(data).to.have.property('errors');
+			expect(data).to.not.have.property('data');
+		});
+	});
 });

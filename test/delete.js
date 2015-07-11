@@ -108,7 +108,8 @@ describe('delete', function() {
 			if (err) return done(err);
 			expect(res.statusCode).to.equal(404);
 			var resdata = JSON.parse(res._getData());
-			expect(resdata).to.have.property('data', null);
+			expect(resdata).to.have.property('errors');
+			expect(resdata).to.not.have.property('data');
 			done();
 		});
 	});
