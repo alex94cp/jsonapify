@@ -48,8 +48,8 @@ describe('Resource', function() {
 		});
 	});
 	
-	describe('#field', function(done) {
-		it('returns resource field by name', function() {
+	describe('#field', function() {
+		it('returns resource field by name', function(done) {
 			var inner = resource.field('complex.inner');
 			expect(inner).to.exist.and.have.property('name', 'complex.inner');
 			var object = {}, response = new Response;
