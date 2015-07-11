@@ -45,13 +45,12 @@ var userResource = new jsonapify.resource(User, {
 });
 
 var router = express.Router();
-router.get('/', jsonapify.enumerate(userResource, {
-	middleware: [
-		auth.authenticateAccessToken(),
-		auth.requirePrivilege('user:enum'),
-		jsonapify.errorHandler(),
-	],
-});
+router.get('/', [
+	auth.authenticateAccessToken(),
+	auth.requirePrivilege('user:enum'),
+	jsonapify.enumerate(userResource),
+	jsonapify.errorHandler(),
+]);
 
 module.exports = exports = router;
 exports.Resource = userResource;
