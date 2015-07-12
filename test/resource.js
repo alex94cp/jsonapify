@@ -6,7 +6,6 @@ var expect = chai.expect;
 chai.use(require('sinon-chai'));
 
 var Resource = require('../lib/resource');
-var Response = require('../lib/response');
 var TestModel = require('./testModel');
 
 function TestSerializer() {}
@@ -50,10 +49,10 @@ describe('Resource', function() {
 	
 	describe('#field', function() {
 		it('returns resource field by name', function(done) {
+			var object = {};
 			var inner = resource.field('complex.inner');
 			expect(inner).to.exist.and.have.property('name', 'complex.inner');
-			var object = {}, response = new Response;
-			inner.serialize(object, response, function(err, value) {
+			inner.serialize(object, null, function(err, value) {
 				expect(err).to.not.exist;
 				expect(value).to.equal(expected.complex.inner);
 				done();
@@ -75,11 +74,10 @@ describe('Resource', function() {
 		var response, object;
 		before(function() {
 			object = new TestModel;
-			response = new Response;
 		});
 		
 		it('turns a document object into resource form', function(done) {
-			resource.serialize(object, response, function(err, resdata) {
+			resource.serialize(object, null, function(err, resdata) {
 				if (err) return done(err);
 				expect(resdata).to.have.property('simple', 'a');
 				expect(resdata).to.have.deep.property('complex.inner', 'b');
@@ -90,11 +88,6 @@ describe('Resource', function() {
 	});
 	
 	describe('#deserialize', function() {
-		var response;
-		before(function() {
-			response = new Response();
-		});
-		
 		it('turns resource data into a document object', function(done) {
 			var resdata = {
 				simple: expected.simple,
@@ -104,7 +97,7 @@ describe('Resource', function() {
 				serializable: 'c',
 			};
 			var output = {};
-			resource.deserialize(resdata, response, output, function(err) {
+			resource.deserialize(resdata, null, output, function(err) {
 				if (err) return done(err);
 				expect(serializer.deserialize).to.have.been.called.once;
 				done();
@@ -120,8 +113,9 @@ describe('Resource', function() {
 				serializable: 'whatever',
 			};
 			var output = {};
-			resource.deserialize(resdata, response, output, function(err) {
+			resource.deserialize(resdata, null, output, function(err) {
 				expect(err).to.exist;
+				expect(output).to.be.empty;
 				done();
 			});
 		});

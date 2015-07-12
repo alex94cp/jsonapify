@@ -5,7 +5,6 @@ var expect = chai.expect;
 chai.use(require('sinon-chai'));
 
 var Field = require('../lib/field');
-var Response = require('../lib/response');
 
 function makeAccessor() {
 	return {
@@ -60,14 +59,13 @@ describe('Field', function() {
 	});
 	
 	describe('#serialize', function() {
-		var accessor, object, response;
+		var accessor, object;
 		before(function() {
 			accessor = makeAccessor();
 		});
 		
 		beforeEach(function() {
 			object = {};
-			response = new Response;
 			accessor.serialize.reset();
 			accessor.deserialize.reset();
 		});
@@ -75,7 +73,7 @@ describe('Field', function() {
 		it('gives immediate value', function(done) {
 			var expected = 'value';
 			var field = new Field('name', expected);
-			field.serialize(object, response, function(err, value) {
+			field.serialize(object, null, function(err, value) {
 				if (err) return done(err);
 				expect(value).to.equal(expected);
 				done();
@@ -86,7 +84,7 @@ describe('Field', function() {
 			var expected = 'value';
 			var field = new Field('name', accessor);
 			accessor.serialize.callsArgWithAsync(2, null, expected);
-			field.serialize(object, response, function(err, value) {
+			field.serialize(object, null, function(err, value) {
 				if (err) return done(err);
 				expect(value).to.equal(expected);
 				expect(accessor.serialize).to.have.been.called.once;
@@ -96,7 +94,7 @@ describe('Field', function() {
 		
 		it('gives undefined if field is not readable', function(done) {
 			var field = new Field('name', 'value', { readable: false });
-			field.serialize(object, response, function(err, value) {
+			field.serialize(object, null, function(err, value) {
 				if (err) return done(err);
 				expect(value).to.be.undefined;
 				done();
@@ -106,7 +104,7 @@ describe('Field', function() {
 		it('gives an error if undefined value and field is not nullable', function(done) {
 			accessor.serialize.callsArgWithAsync(2, null, undefined);
 			var field = new Field('name', accessor, { nullable: false });
-			field.serialize(object, response, function(err, value) {
+			field.serialize(object, null, function(err, value) {
 				expect(err).to.exist;
 				expect(accessor.serialize).to.have.been.called.once;
 				done();
@@ -116,7 +114,7 @@ describe('Field', function() {
 		it('propagates accessor#serialize errors', function(done) {
 			accessor.serialize.callsArgWithAsync(2, new Error);
 			var field = new Field('name', accessor);
-			field.serialize(object, response, function(err, value) {
+			field.serialize(object, null, function(err, value) {
 				expect(err).to.exist;
 				done();
 			});
@@ -131,7 +129,6 @@ describe('Field', function() {
 		
 		beforeEach(function() {
 			output = {};
-			response = new Response;
 			accessor.serialize.reset();
 			accessor.deserialize.reset();
 		});
@@ -139,7 +136,7 @@ describe('Field', function() {
 		it('invokes accessor#deserialize', function(done) {
 			accessor.deserialize.callsArgWithAsync(3, null);
 			var field = new Field('name', accessor);
-			field.deserialize('value', response, output, function(err) {
+			field.deserialize('value', null, output, function(err) {
 				if (err) return done(err);
 				expect(output).to.be.empty;
 				expect(accessor.deserialize).to.have.been.called.once;
@@ -150,7 +147,7 @@ describe('Field', function() {
 		it('omits field if not writable', function(done) {
 			accessor.deserialize.callsArgWithAsync(3, null);
 			var field = new Field('name', accessor, { writable: false });
-			field.deserialize('value', response, output, function(err) {
+			field.deserialize('value', null, output, function(err) {
 				if (err) return done(err);
 				expect(output).to.be.empty;
 				expect(accessor.deserialize).to.not.have.been.called;
@@ -161,7 +158,7 @@ describe('Field', function() {
 		it('gives an error if undefined value and field is not nullable', function(done) {
 			accessor.deserialize.callsArgWithAsync(3, null);
 			var field = new Field('name', accessor);
-			field.deserialize(undefined, response, output, function(err) {
+			field.deserialize(undefined, null, output, function(err) {
 				expect(err).to.exist;
 				expect(output).to.be.empty;
 				expect(accessor.deserialize).to.not.have.been.called;
@@ -171,7 +168,7 @@ describe('Field', function() {
 		
 		it('gives an error if field value does not match expected value', function(done) {
 			var field = new Field('name', 'expected');
-			field.deserialize('invalid', response, output, function(err) {
+			field.deserialize('invalid', null, output, function(err) {
 				expect(err).to.exist;
 				expect(output).to.be.empty;
 				done();
@@ -181,7 +178,7 @@ describe('Field', function() {
 		it('propagates accessor#deserialize errors', function(done) {
 			accessor.deserialize.callsArgWithAsync(3, new Error);
 			var field = new Field('name', accessor);
-			field.deserialize('value', response, output, function(err) {
+			field.deserialize('value', null, output, function(err) {
 				expect(err).to.exist;
 				expect(output).to.be.empty;
 				expect(accessor.deserialize).to.have.been.called.once;

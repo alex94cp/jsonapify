@@ -1,12 +1,14 @@
 var chai = require('chai');
 var expect = chai.expect;
+var httpMocks = require('node-mocks-http');
 
 var Response = require('../lib/response');
 
 describe('Response', function() {
 	var response;
 	beforeEach(function() {
-		response = new Response;
+		var res = httpMocks.createResponse();
+		response = new Response(res);
 	});
 	
 	describe('#meta', function() {

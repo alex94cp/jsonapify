@@ -1,4 +1,5 @@
 var chai = require('chai');
+var httpMocks = require('node-mocks-http');
 var expect = chai.expect;
 
 var mongoose = require('mongoose');
@@ -11,7 +12,7 @@ var Resource = require('../lib/resource');
 var Property = require('../lib/accessors/property');
 
 describe('Ref', function() {
-	var testModel;
+	var testModel, response;
 	before(function(done) {
 		mongoose.connect('mongodb://localhost/test', function(err) {
 			if (err) return done(err)
@@ -23,6 +24,8 @@ describe('Ref', function() {
 	beforeEach(function(done) {
 		// mockgoose.reset();
 		mongoose.connection.db.dropDatabase(done);
+		var res = httpMocks.createResponse();
+		response = new Response(res);
 	});
 	
 	after(function(done) {
@@ -32,11 +35,12 @@ describe('Ref', function() {
 	describe('#serialize', function() {
 		var resource, response;
 		beforeEach(function() {
-			response = new Response;
 			resource = new Resource(testModel, {
 				id: new Property('_id'),
 				type: 'test-models',
 			});
+			var res = httpMocks.createResponse();
+			response = new Response(res);
 		});
 		
 		it('sets resource field from document', function(done) {
@@ -91,11 +95,10 @@ describe('Ref', function() {
 	});
 	
 	describe('#deserialize', function() {
-		var linked, output, response;
+		var linked, output;
 		before(function() {
 			output = {};
 			linked = new testModel;
-			response = new Response;
 		});
 		
 		it('sets document property from resource field', function(done) {
@@ -110,7 +113,7 @@ describe('Ref', function() {
 				},
 			};
 			var ref = new Ref(resource, '_id');
-			ref.deserialize(resdata, response, output, function(err) {
+			ref.deserialize(resdata, null, output, function(err) {
 				if (err) return done(err);
 				expect(output).to.have.property('_id');
 				expect(output._id).to.satisfy(function(id) {
