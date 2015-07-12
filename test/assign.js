@@ -180,7 +180,7 @@ describe('assign', function() {
 				},
 			});
 			jsonapify.assign(resource, { number: jsonapify.param('id') }, {
-					noWait: true
+				noWait: true
 			})(req, res, function(err) {
 				if (err) return done(err);
 				expect(res.statusCode).to.equal(202);

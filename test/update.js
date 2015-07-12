@@ -8,6 +8,7 @@ var mongoose = require('mongoose');
 // mockgoose(mongoose);
 
 var jsonapify = require('../');
+var errors = require('../lib/errors');
 var Resource = require('../lib/resource');
 
 describe('update', function() {
@@ -159,7 +160,7 @@ describe('update', function() {
 		});
 	});
 	
-	it('sends back 404 Not Found if resource not found', function(done) {
+	it('gives ResourceNotFound error if resource not found', function(done) {
 		var req = httpMocks.createRequest({
 			headers: {
 				'Content-Type': 'application/vnd.api+json',
@@ -178,11 +179,7 @@ describe('update', function() {
 			},
 		});
 		jsonapify.update(resource, jsonapify.param('id'))(req, res, function(err) {
-			if (err) return done(err);
-			expect(res.statusCode).to.equal(404);
-			var resdata = JSON.parse(res._getData());
-			expect(resdata).to.have.property('errors');
-			expect(resdata).to.not.have.property('data');
+			expect(err).to.exist.and.be.an.instanceof(errors.ResourceNotFound);
 			done();
 		});
 	});
