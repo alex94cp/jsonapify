@@ -66,32 +66,6 @@ describe('Ref', function() {
 				});
 			});
 		});
-		
-		it('sets meta object in response', function(done) {
-			var ref = new Ref(resource, '_id', { meta: { name: 'value' }});
-			var object = new testModel;
-			object.save(function(err) {
-				if (err) return done(err);
-				ref.serialize(object, response, function(err, resdata) {
-					if (err) return done(err);
-					expect(resdata).to.have.deep.property('meta.name', 'value');
-					done();
-				});
-			});
-		});
-		
-		it('sets links object in response', function(done) {
-			var ref = new Ref(resource, '_id', { links: { name: 'value' }});
-			var object = new testModel;
-			object.save(function(err) {
-				if (err) return done(err);
-				ref.serialize(object, response, function(err, resdata) {
-					if (err) return done(err);
-					expect(resdata).to.have.deep.property('links.name', 'value');
-					done();
-				});
-			});
-		});
 	});
 	
 	describe('#deserialize', function() {
