@@ -1,5 +1,6 @@
 var chai = require('chai');
 var expect = chai.expect;
+var mongoose = require('mongoose');
 var httpMocks = require('node-mocks-http');
 
 var Response = require('../lib/response');
@@ -122,7 +123,8 @@ describe('Response', function() {
 	
 	describe('#include', function() {
 		it('adds include to included objects in response', function() {
-			var expected = { type: 'type', id: 1, field: 'field' };
+			var id = mongoose.Types.ObjectId();
+			var expected = { type: 'type', id: id, field: 'field' };
 			response.include(expected.type, expected.id, expected);
 			var data = response.toJSON();
 			expect(data).to.have.property('included');
@@ -130,7 +132,8 @@ describe('Response', function() {
 		});
 		
 		it('returns included object from response', function() {
-			var expected = { type: 'type', id: 1, field: 'field' };
+			var id = mongoose.Types.ObjectId();
+			var expected = { type: 'type', id: id, field: 'field' };
 			response.include(expected.type, expected.id, expected);
 			var include = response.include(expected.type, expected.id);
 			expect(include).to.deep.equal(expected);
