@@ -30,7 +30,7 @@
     "istanbul": "^0.3.17",
     "mocha": "^2.2.5",
     "mockgoose": "^2.0.3",
-    "mongoose": "^4.0.6",
+    "mongoose": "^4.0.7",
     "node-mocks-http": "^1.4.3",
     "sinon": "^1.15.4",
     "sinon-chai": "^2.8.0"
