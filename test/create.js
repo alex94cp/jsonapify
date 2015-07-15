@@ -39,8 +39,8 @@ describe('create', function() {
 	
 	beforeEach(function(done) {
 		// mockgoose.reset();
-		mongoose.connection.db.dropDatabase(done);
 		res = httpMocks.createResponse();
+		mongoose.connection.db.dropDatabase(done);
 	});
 	
 	after(function(done) {
