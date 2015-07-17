@@ -60,16 +60,6 @@ describe('Resource', function() {
 		});
 	});
 	
-	describe('#select', function() {
-		it('returns a resource view with only selected fields', function() {
-			var resview = resource.select('simple');
-			var simple = resview.field('simple');
-			expect(simple).to.exist.and.have.property('name', 'simple');
-			var inner = resview.field('complex.inner');
-			expect(inner).to.not.exist;
-		});
-	});
-	
 	describe('#serialize', function() {
 		var response, object;
 		before(function() {
