@@ -5,8 +5,6 @@ var httpMocks = require('node-mocks-http');
 var expect = chai.expect;
 
 var mongoose = require('mongoose');
-// var mockgoose = require('mockgoose');
-// mockgoose(mongoose);
 
 var jsonapify = require('../');
 var Resource = require('../lib/resource');

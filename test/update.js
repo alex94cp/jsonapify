@@ -4,8 +4,6 @@ var httpMocks = require('node-mocks-http');
 var expect = chai.expect;
 
 var mongoose = require('mongoose');
-// var mockgoose = require('mockgoose');
-// mockgoose(mongoose);
 
 var jsonapify = require('../');
 var errors = require('../lib/errors');
@@ -38,7 +36,6 @@ describe('update', function() {
 	});
 	
 	beforeEach(function(done) {
-		// mockgoose.reset();
 		mongoose.connection.db.dropDatabase(done);
 		res = httpMocks.createResponse();
 	});
