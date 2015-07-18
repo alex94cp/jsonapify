@@ -47,19 +47,6 @@ describe('Resource', function() {
 		});
 	});
 	
-	describe('#field', function() {
-		it('returns resource field by name', function(done) {
-			var object = {};
-			var inner = resource.field('complex.inner');
-			expect(inner).to.exist.and.have.property('name', 'complex.inner');
-			inner.serialize(object, null, function(err, value) {
-				expect(err).to.not.exist;
-				expect(value).to.equal(expected.complex.inner);
-				done();
-			});
-		});
-	});
-	
 	describe('#serialize', function() {
 		var response, object;
 		before(function() {
