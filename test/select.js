@@ -7,7 +7,7 @@ var mongoose = require('mongoose');
 var jsonapify = require('../');
 var Resource = require('../lib/resource');
 var Response = require('../lib/response');
-var Select = require('../lib/filters/select');
+var Selector = require('../lib/filters/select');
 
 describe('select', function() {
 	var testModel, resource, response;
@@ -32,15 +32,15 @@ describe('select', function() {
 	});
 	
 	describe('#initialize', function() {
-		it('setups resource hooks and modifies all resource views', function(done) {
-			var filter = new Select;
+		it('sets resource hooks and modifies all resource views', function(done) {
+			var select = new Selector;
 			var object = new testModel;
 			var req = httpMocks.createRequest({
 				query: {
 					fields: 'type,id,attributes.a',
 				},
 			})
-			filter.initialize(resource, req, response);
+			select.initialize(resource, req);
 			resource.serialize(object, null, function(err, resdata) {
 				if (err) return done(err);
 				expect(resdata).to.have.property('id');
@@ -54,15 +54,15 @@ describe('select', function() {
 	
 	describe('#remove', function() {
 		it('removes all resource hooks', function(done) {
-			var filter = new Select;
+			var select = new Selector;
 			var object = new testModel;
 			var req = httpMocks.createRequest({
 				query: {
 					fields: 'type,id,attributes.a',
 				},
 			})
-			filter.initialize(resource, req, response);
-			filter.remove();
+			select.initialize(resource, req, response);
+			select.remove();
 			resource.serialize(object, null, function(err, resdata) {
 				if (err) return done(err);
 				expect(resdata).to.have.property('id');
