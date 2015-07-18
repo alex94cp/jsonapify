@@ -49,8 +49,10 @@ describe('paginate', function() {
 				if (err) return done(err);
 				var req = httpMocks.createRequest({
 					query: {
-						'page[size]': 2,
-						'page[number]': 0,
+						page: {
+							size: 2,
+							number: 0,
+						},
 					},
 				})
 				var paginate = new Paginator;
@@ -69,8 +71,10 @@ describe('paginate', function() {
 			var req = httpMocks.createRequest({
 				url: '/',
 				query: {
-						'page[size]': 2,
-						'page[number]': 0,
+					page: {
+						size: 2,
+						number: 0,
+					},
 				},
 			});
 			var res = httpMocks.createResponse();
@@ -95,8 +99,10 @@ describe('paginate', function() {
 				if (err) return done(err);
 				var req = httpMocks.createRequest({
 					query: {
-						'page[size]': 2,
-						'page[number]': 0,
+						page: {
+							size: 2,
+							number: 0,
+						},
 					},
 				})
 				var paginate = new Paginator;
