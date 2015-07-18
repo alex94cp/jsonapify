@@ -1,6 +1,6 @@
 {
   "name": "jsonapify",
-  "version": "0.4.21",
+  "version": "0.4.22",
   "description": "Middleware for easy development of JSON-API compatible APIs",
   "main": "index.js",
   "scripts": {
