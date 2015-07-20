@@ -1,7 +1,0 @@
-language: node_js
-node_js:
-  - "stable"
-  - "iojs"
-services: mongodb
-script: "npm run-script test-coverage"
-after_script: "cat ./coverage/lcov.info | coveralls"

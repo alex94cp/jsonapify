@@ -1,43 +1,41 @@
 {
   "name": "jsonapify",
-  "version": "0.4.22",
-  "description": "Middleware for easy development of JSON-API compatible APIs",
+  "version": "1.0.0",
+  "description": "A library for the development of JSON APIs",
   "main": "index.js",
   "scripts": {
-    "test": "mocha",
-    "test-coverage": "istanbul cover _mocha"
+    "test": "mocha"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/alex94puchades/jsonapify.git"
+    "url": "git+https://github.com/alex94puchades/jsonapify.git"
   },
   "keywords": [
-    "json-api",
     "jsonapi",
+    "json-api",
     "rest",
+    "api",
+    "express",
     "connect",
-    "middleware"
+    "middleware",
+    "mongoose"
   ],
   "author": "Alejandro Caravaca Puchades <alex94puchades@gmail.com>",
   "license": "Apache-2.0",
   "bugs": {
     "url": "https://github.com/alex94puchades/jsonapify/issues"
   },
+  "homepage": "https://github.com/alex94puchades/jsonapify#readme",
   "devDependencies": {
-    "async": "^1.3.0",
-    "chai": "^3.0.0",
-    "coveralls": "^2.11.2",
-    "istanbul": "^0.3.17",
+    "chai": "^3.2.0",
     "mocha": "^2.2.5",
-    "mockgoose": "^2.0.3",
-    "mongoose": "^4.0.7",
     "node-mocks-http": "^1.4.3",
     "sinon": "^1.15.4",
     "sinon-chai": "^2.8.0"
   },
   "dependencies": {
+    "async": "^1.3.0",
     "lodash": "^3.10.0",
-    "negotiator": "^0.5.3",
-    "content-type": "^1.0.1"
+    "mongodb": "^2.0.39"
   }
 }
