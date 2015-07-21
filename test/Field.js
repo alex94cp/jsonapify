@@ -18,6 +18,21 @@ describe('Field', function() {
 		});
 	});
 	
+	describe('#name', function() {
+		it('returns the field name', function() {
+			var expected = 'name';
+			var field = new Field(resource, expected, null);
+			expect(field).to.have.property('name', expected);
+		});
+	});
+	
+	describe('#resource', function() {
+		it('returns the resource the field is associated with', function() {
+			var field = new Field(resource, 'name', null);
+			expect(field).to.have.property('resource', resource);
+		});
+	});
+	
 	describe('#readable', function() {
 		it('returns true if field is readable', function() {
 			var field = new Field(resource, 'name', null, { readable: true });
