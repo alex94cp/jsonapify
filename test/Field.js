@@ -13,9 +13,7 @@ var Transaction = jsonapify.Transaction;
 describe('Field', function() {
 	var resource;
 	before(function() {
-		resource = new Resource({
-			type: 'test',
-		});
+		resource = new Resource({ type: 'test' });
 	});
 	
 	describe('#name', function() {

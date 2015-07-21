@@ -1,5 +1,4 @@
-var chai = require('chai');
-var expect = chai.expect;
+var expect = require('chai').expect;
 
 var jsonapify = require('../');
 var Link = jsonapify.Link;

@@ -12,10 +12,7 @@ var Transaction = jsonapify.Transaction;
 describe('Transaction', function() {
 	var resource, response, transaction;
 	before(function() {
-		resource = new Resource({
-			type: 'test',
-		});
-		
+		resource = new Resource({ type: 'test' });
 	});
 	
 	beforeEach(function() {
