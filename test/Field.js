@@ -67,14 +67,21 @@ describe('Field', function() {
 		});
 	});
 	
-	describe('#serialize', function() {
-		var resource, transaction, object;
-		before(function() {
-			resource = new Resource({
-				type: 'test',
-			});
+	describe('#adjustQuery', function() {
+		it('invokes adjustQuery method on accessor with arguments', function() {
+			var query = {};
+			var action = 'action';
+			var accessor = createAccessor();
+			accessor.adjustQuery.returns(true);
+			var field = new Field(resource, 'name', accessor);
+			var handled = field.adjustQuery(query, action);
+			expect(handled).to.be.true;
+			expect(accessor.adjustQuery).to.have.been.calledWith(query, action);
 		});
-		
+	});
+	
+	describe('#serialize', function() {
+		var transaction, object;
 		beforeEach(function() {
 			object = {};
 			transaction = createTransaction(resource);
@@ -114,13 +121,7 @@ describe('Field', function() {
 	});
 	
 	describe('#deserialize', function() {
-		var resource, transaction, object;
-		before(function() {
-			resource = new Resource({
-				type: 'test',
-			});
-		});
-		
+		var transaction, object;
 		beforeEach(function() {
 			transaction = createTransaction(resource);
 			object = {};
@@ -190,6 +191,7 @@ function createTransaction(resource) {
 
 function createAccessor() {
 	return {
+		adjustQuery: sinon.stub(),
 		serialize: sinon.stub(),
 		deserialize: sinon.stub(),
 	};
