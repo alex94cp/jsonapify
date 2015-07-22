@@ -120,9 +120,12 @@ describe('ResourceView', function() {
 	
 	describe('#findOne', function() {
 		var resource, transaction, object;
-		beforeEach(function(done) {
+		before(function() {
 			resource = new Resource(model, { type: 'test' });
 			transaction = new Transaction(resource, response);
+		});
+		
+		beforeEach(function(done) {
 			model.create({}, function(err, result) {
 				if (err) return done(err);
 				object = result;
@@ -157,9 +160,12 @@ describe('ResourceView', function() {
 	
 	describe('#findMany', function() {
 		var resource, transaction, objects;
-		beforeEach(function(done) {
+		before(function() {
 			resource = new Resource(model, { type: 'test' });
 			transaction = new Transaction(resource, response);
+		});
+		
+		beforeEach(function(done) {
 			async.parallel([
 				function(next) { model.create({}, next); },
 				function(next) { model.create({}, next); },
