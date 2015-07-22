@@ -14,7 +14,7 @@ var Response = jsonapify.Response;
 describe('Resource', function() {
 	var model;
 	before(function() {
-		model = mongoose.model('Test', new mongoose.Schema);
+		model = mongoose.model('ResourceTest', new mongoose.Schema);
 	});
 	
 	describe('#model', function() {
