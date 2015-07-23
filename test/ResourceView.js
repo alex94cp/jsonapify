@@ -13,14 +13,20 @@ var Response = jsonapify.Response;
 var Transaction = jsonapify.Transaction;
 var ResourceView = jsonapify.ResourceView;
 
-mongoose.connect('mongodb://localhost/test');
-
 describe('ResourceView', function() {
 	var model, response;
-	before(function() {
-		model = mongoose.model('ResourceViewTest', new mongoose.Schema);
-		var res = httpMocks.createResponse();
-		response = new Response(res);
+	before(function(done) {
+		mongoose.connect('mongodb://localhost/test', function(err) {
+			if (err) return done(err);
+			model = mongoose.model('ResourceViewTest', new mongoose.Schema);
+			var res = httpMocks.createResponse();
+			response = new Response(res);
+			done();
+		});
+	});
+	
+	after(function(done) {
+		mongoose.disconnect(done);
 	});
 	
 	describe('#model', function() {
