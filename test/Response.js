@@ -122,7 +122,7 @@ describe('Response', function() {
 			expect(resdata).to.have.property('data', expected);
 		});
 		
-		it('sets error code as http status if only all errors are equal', function() {
+		it('sets error code as http status only if all errors are equal', function() {
 			var httpError = new HttpError(404);
 			response.error(httpError).send();
 			expect(res.statusCode).to.equal(httpError.status);

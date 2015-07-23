@@ -42,7 +42,7 @@ describe('ResourceView', function() {
 	});
 	
 	describe('#field', function() {
-		it('gives specified field', function() {
+		it('gives selected field', function() {
 			var resource = new Resource({ type: 'test', name: 'value' });
 			var transaction = new Transaction(resource, response);
 			var resview = resource.view(transaction);
