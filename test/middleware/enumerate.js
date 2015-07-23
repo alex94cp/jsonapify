@@ -10,9 +10,13 @@ var enumerate = jsonapify.middleware.enumerate;
 
 describe('enumerate', function() {
 	var model, resource, req, res, objects;
-	before(function() {
-		model = mongoose.model('EnumerateTest', new mongoose.Schema);
-		resource = new Resource(model, { type: 'test' });
+	before(function(done) {
+		mongoose.connect('mongodb://localhost/test', function(err) {
+			if (err) return done(err);
+			model = mongoose.model('EnumerateTest', new mongoose.Schema);
+			resource = new Resource(model, { type: 'test' });
+			done();
+		});
 	});
 	
 	beforeEach(function(done) {
@@ -31,6 +35,10 @@ describe('enumerate', function() {
 	
 	afterEach(function(done) {
 		mongoose.connection.db.dropDatabase(done);
+	});
+	
+	after(function(done) {
+		mongoose.disconnect(done);
 	});
 	
 	it('responds with an array of resources', function(done) {
