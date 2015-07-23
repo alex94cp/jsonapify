@@ -34,15 +34,18 @@ describe('create', function() {
 		var req = httpMocks.createRequest({ body: { data: { type: 'test' }}});
 		create(resource)(req, res, function(err) {
 			if (err) return done(err);
-			model.find(function(err, results) {
+			var resdata = res._getData();
+			resdata = JSON.parse(resdata);
+			expect(resdata).to.have.deep.property('data.type', 'test');
+			model.count(function(err, count) {
 				if (err) return done(err);
-				expect(results).to.have.length(1);
+				expect(count).to.equal(1);
 				done();
 			});
 		});
 	});
 	
-	it('sends an error if wrong type', function(done) {
+	it('sends an error if trying to create resource with wrong type', function(done) {
 		var req = httpMocks.createRequest({ body: { data: { type: 'invalid' }}});
 		create(resource)(req, res, function(err) {
 			expect(err).to.be.an.instanceof(InvalidFieldValue);
