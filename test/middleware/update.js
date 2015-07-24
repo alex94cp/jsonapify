@@ -10,6 +10,7 @@ var jsonapify = require('../../');
 var Resource = jsonapify.Resource;
 var update = jsonapify.middleware.update;
 var ResourceNotFound = jsonapify.errors.ResourceNotFound;
+var InvalidFieldValue = jsonapify.errors.InvalidFieldValue;
 
 describe('update', function() {
 	var model, resource, accessor, res;
@@ -44,11 +45,26 @@ describe('update', function() {
 				params: { id: object._id },
 				body: { data: { type: 'test', field: 'after' }},
 			});
-			var expected = req.body.data;
 			update([resource, jsonapify.param('id')])(req, res, function(err) {
 				if (err) return done(err);
 				expect(accessor.serialize).to.have.been.called.once;
 				expect(accessor.deserialize).to.have.been.called.once;
+				done();
+			});
+		});
+	});
+	
+	it('sends an error if trying to update resource with wrong type', function(done) {
+		model.create({ field: 'before' }, function(err, object) {
+			if (err) return done(err);
+			accessor.serialize.callsArgWithAsync(3, null, 'value');
+			accessor.deserialize.callsArgWithAsync(4, null);
+			var req = httpMocks.createRequest({
+				params: { id: object._id },
+				body: { data: { type: 'invalid', field: 'after' }},
+			});
+			update([resource, jsonapify.param('id')])(req, res, function(err) {
+				expect(err).to.be.an.instanceof(InvalidFieldValue);
 				done();
 			});
 		});
