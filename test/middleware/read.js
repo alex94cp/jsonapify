@@ -1,8 +1,11 @@
-var expect = require('chai').expect;
+var chai = require('chai');
+chai.use(require('sinon-chai'));
 var mongoose = require('mongoose');
 var httpMocks = require('node-mocks-http');
 var ObjectId = mongoose.Types.ObjectId;
+var expect = chai.expect;
 
+var common = require('./common');
 var jsonapify = require('../../');
 var Resource = jsonapify.Resource;
 var read = jsonapify.middleware.read;
@@ -10,24 +13,19 @@ var Property = jsonapify.accessors.Property;
 var ResourceNotFound = jsonapify.errors.ResourceNotFound;
 
 describe('read', function() {
-	var model, resource, res;
+	var model, resource, accessor, res;
 	before(function(done) {
 		mongoose.connect('mongodb://localhost/test', function(err) {
 			if (err) return done(err);
-			model = mongoose.model('ReadTest', new mongoose.Schema({
-				field: String,
-			}));
+			model = mongoose.model('ReadTest', new mongoose.Schema);
 			done();
 		});
 	});
 	
 	beforeEach(function() {
+		accessor = common.createAccessor();
+		resource = new Resource(model, { type: 'test', field: accessor });
 		res = httpMocks.createResponse();
-		resource = new Resource(model, {
-			type: 'test',
-			id: new Property('_id'),
-			field: new Property('field'),
-		});
 	});
 	
 	afterEach(function(done) {
@@ -41,23 +39,21 @@ describe('read', function() {
 	it('retrieves existing resource and sends back resource data', function(done) {
 		model.create({ field: 'value' }, function(err, object) {
 			if (err) return done(err);
+			accessor.serialize.callsArgWithAsync(3, null, 'value');
+			accessor.deserialize.callsArgWithAsync(4, null);
 			var req = httpMocks.createRequest({ params: { id: object._id }});
 			read([resource, jsonapify.param('id')])(req, res, function(err) {
 				if (err) return done(err);
-				var resdata = res._getData();
-				resdata = JSON.parse(resdata);
-				expect(resdata).to.have.deep.property('data.id');
-				expect(resdata.data.id).to.satisfy(function(id) {
-					return object._id.equals(id);
-				});
-				expect(resdata).to.have.deep.property('data.type', 'test');
-				expect(resdata).to.have.deep.property('data.field', 'value');
+				expect(accessor.serialize).to.have.been.called.once;
+				expect(accessor.deserialize).to.not.have.been.called;
 				done();
 			});
 		});
 	});
 	
 	it('sends an error if resource not found', function(done) {
+		accessor.serialize.callsArgWithAsync(3, null, 'value');
+		accessor.deserialize.callsArgWithAsync(4, null);
 		var req = httpMocks.createRequest({ params: { id: ObjectId() }});
 		read([resource, jsonapify.param('id')])(req, res, function(err) {
 			expect(err).to.be.an.instanceof(ResourceNotFound);

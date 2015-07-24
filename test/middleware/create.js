@@ -1,14 +1,17 @@
-var expect = require('chai').expect;
+var chai = require('chai');
+chai.use(require('sinon-chai'));
 var mongoose = require('mongoose');
 var httpMocks = require('node-mocks-http');
+var expect = chai.expect;
 
+var common = require('./common');
 var jsonapify = require('../../');
 var Resource = jsonapify.Resource;
 var create = jsonapify.middleware.create;
 var InvalidFieldValue = jsonapify.errors.InvalidFieldValue;
 
 describe('create', function() {
-	var model, resource, res;
+	var model, resource, accessor, res;
 	before(function(done) {
 		mongoose.connect('mongodb://localhost/test', function(err) {
 			if (err) return done(err);
@@ -18,7 +21,8 @@ describe('create', function() {
 	});
 	
 	beforeEach(function() {
-		resource = new Resource(model, { type: 'test' });
+		accessor = common.createAccessor();
+		resource = new Resource(model, { type: 'test', field: accessor });
 		res = httpMocks.createResponse();
 	});
 	
@@ -31,12 +35,15 @@ describe('create', function() {
 	});
 	
 	it('creates resource and sends back resource data', function(done) {
-		var req = httpMocks.createRequest({ body: { data: { type: 'test' }}});
+		accessor.serialize.callsArgWithAsync(3, null, 'value');
+		accessor.deserialize.callsArgWithAsync(4, null);
+		var req = httpMocks.createRequest({
+			body: { data: { type: 'test', field: 'value' }}
+		});
 		create(resource)(req, res, function(err) {
 			if (err) return done(err);
-			var resdata = res._getData();
-			resdata = JSON.parse(resdata);
-			expect(resdata).to.have.deep.property('data.type', 'test');
+			expect(accessor.serialize).to.have.been.called.once;
+			expect(accessor.deserialize).to.have.been.called.once;
 			model.count(function(err, count) {
 				if (err) return done(err);
 				expect(count).to.equal(1);
@@ -46,7 +53,11 @@ describe('create', function() {
 	});
 	
 	it('sends an error if trying to create resource with wrong type', function(done) {
-		var req = httpMocks.createRequest({ body: { data: { type: 'invalid' }}});
+		accessor.serialize.callsArgWithAsync(3, null, 'value');
+		accessor.deserialize.callsArgWithAsync(4, null);
+		var req = httpMocks.createRequest({
+			body: { data: { type: 'invalid', field: 'value' }}
+		});
 		create(resource)(req, res, function(err) {
 			expect(err).to.be.an.instanceof(InvalidFieldValue);
 			model.find(function(err, results) {

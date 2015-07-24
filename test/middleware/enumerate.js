@@ -1,20 +1,21 @@
 var _ = require('lodash');
+var chai = require('chai');
 var async = require('async');
-var expect = require('chai').expect;
 var mongoose = require('mongoose');
 var httpMocks = require('node-mocks-http');
+var expect = chai.expect;
 
+var common = require('./common');
 var jsonapify = require('../../');
 var Resource = jsonapify.Resource;
 var enumerate = jsonapify.middleware.enumerate;
 
 describe('enumerate', function() {
-	var model, resource, req, res, objects;
+	var model, resource, accessor, req, res, objects;
 	before(function(done) {
 		mongoose.connect('mongodb://localhost/test', function(err) {
 			if (err) return done(err);
 			model = mongoose.model('EnumerateTest', new mongoose.Schema);
-			resource = new Resource(model, { type: 'test' });
 			done();
 		});
 	});
@@ -22,6 +23,8 @@ describe('enumerate', function() {
 	beforeEach(function(done) {
 		req = httpMocks.createRequest();
 		res = httpMocks.createResponse();
+		accessor = common.createAccessor();
+		resource = new Resource(model, { type: 'test', field: accessor });
 		async.parallel([
 			function(next) { model.create({}, next); },
 			function(next) { model.create({}, next); },
@@ -42,16 +45,12 @@ describe('enumerate', function() {
 	});
 	
 	it('responds with an array of resources', function(done) {
+		accessor.deserialize.callsArgWithAsync(4, null);
+		accessor.serialize.callsArgWithAsync(3, null, 'value');
 		enumerate(resource)(req, res, function(err) {
 			if (err) return done(err);
-			var resdata = res._getData();
-			resdata = JSON.parse(resdata);
-			expect(resdata).to.have.property('data');
-			expect(resdata.data).to.have.length(objects.length);
-			_.each(resdata.data, function(resourceData) {
-				expect(resourceData).to.have.property('type', 'test');
-			});
-			expect(resdata).to.have.deep.property('meta.count', objects.length);
+			expect(accessor.serialize).to.have.been.called.thrice;
+			expect(accessor.deserialize).to.not.have.been.called;
 			done();
 		});
 	});
