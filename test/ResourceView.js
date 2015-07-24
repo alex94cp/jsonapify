@@ -7,6 +7,7 @@ var mongoose = require('mongoose');
 var httpMocks = require('node-mocks-http');
 var expect = chai.expect;
 
+var common = require('./common');
 var jsonapify = require('../');
 var Resource = jsonapify.Resource;
 var Response = jsonapify.Response;
@@ -214,7 +215,7 @@ describe('ResourceView', function() {
 	describe('#serialize', function() {
 		it('invokes serialize method on field', function(done) {
 			var object = {};
-			var accessor = createAccessor();
+			var accessor = common.createAccessor();
 			accessor.serialize.callsArgWithAsync(3, null, 'value');
 			var resource = new Resource({ type: 'test', field: accessor });
 			var transaction = new Transaction(resource, response);
@@ -230,7 +231,7 @@ describe('ResourceView', function() {
 	describe('#deserialize', function() {
 		it('invokes deserialize method on field', function(done) {
 			var object = {};
-			var accessor = createAccessor();
+			var accessor = common.createAccessor();
 			var resdata = { type: 'test', field: 'value' };
 			accessor.deserialize.callsArgWithAsync(4, null, object);
 			var resource = new Resource({ type: 'test', field: accessor });
@@ -244,11 +245,3 @@ describe('ResourceView', function() {
 		});
 	});
 });
-
-function createAccessor() {
-	return {
-		adjustQuery: sinon.stub(),
-		serialize: sinon.stub(),
-		deserialize: sinon.stub(),
-	};
-}
