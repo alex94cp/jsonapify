@@ -1,4 +1,5 @@
 var chai = require('chai');
+var sinon = require('sinon');
 chai.use(require('sinon-chai'));
 var mongoose = require('mongoose');
 var httpMocks = require('node-mocks-http');
@@ -53,6 +54,23 @@ describe('delete', function() {
 		_delete([resource, jsonapify.param('id')])(req, res, function(err) {
 			expect(err).to.be.an.instanceof(ResourceNotFound);
 			done();
+		});
+	});
+	
+	it('invokes transaction filters', function(done) {
+		model.create({}, function(err, object) {
+			if (err) return done(err);
+			var req = httpMocks.createRequest({
+				params: { id: object._id },
+				body: { data: { type: 'test', field: 'value' }},
+			});
+			var filter = sinon.spy();
+			var chain = [resource, jsonapify.param('id')];
+			_delete(chain, { filters: filter })(req, res, function(err) {
+				if (err) return done(err);
+				expect(filter).to.have.been.called.once;
+				done();
+			});
 		});
 	});
 });

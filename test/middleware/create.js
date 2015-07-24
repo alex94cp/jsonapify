@@ -1,10 +1,11 @@
 var chai = require('chai');
+var sinon = require('sinon');
 chai.use(require('sinon-chai'));
 var mongoose = require('mongoose');
 var httpMocks = require('node-mocks-http');
 var expect = chai.expect;
 
-var common = require('./common');
+var common = require('../common');
 var jsonapify = require('../../');
 var Resource = jsonapify.Resource;
 var create = jsonapify.middleware.create;
@@ -65,6 +66,20 @@ describe('create', function() {
 				expect(results).to.be.empty;
 				done();
 			});
+		});
+	});
+	
+	it('invokes transaction filters', function(done) {
+		accessor.serialize.callsArgWithAsync(3, null, 'value');
+		accessor.deserialize.callsArgWithAsync(4, null);
+		var req = httpMocks.createRequest({
+			body: { data: { type: 'test', field: 'value' }},
+		});
+		var filter = sinon.spy();
+		create(resource, { filters: filter })(req, res, function(err) {
+			if (err) return done(err);
+			expect(filter).to.have.been.called.once;
+			done();
 		});
 	});
 });
