@@ -145,7 +145,7 @@ describe('ResourceView', function() {
 		
 		it('retrieves mongoose document from the database', function(done) {
 			var resview = resource.view(transaction);
-			resview.findOne(transaction, { _id: object._id }, function(err, data) {
+			resview.findOne({ _id: object._id }, function(err, data) {
 				if (err) return done(err);
 				expect(data).to.have.property('id');
 				expect(data._id).to.satisfy(function(id) {
@@ -159,7 +159,7 @@ describe('ResourceView', function() {
 			var handler = sinon.stub().returnsArg(1);
 			transaction.subscribe(resource.type, 'query', handler);
 			var resview = resource.view(transaction);
-			var query = resview.findOne(transaction, { _id: object._id });
+			var query = resview.findOne({ _id: object._id });
 			expect(handler).to.have.been.calledWith(resource, query);
 		});
 	});
@@ -189,7 +189,7 @@ describe('ResourceView', function() {
 		
 		it('retrieves mongoose documents from the database', function(done) {
 			var resview = resource.view(transaction);
-			resview.findMany(transaction, {}, function(err, results) {
+			resview.findMany({}, function(err, results) {
 				if (err) return done(err);
 				expect(results).to.have.length(objects.length);
 				_.each(results, function(result) {
@@ -206,7 +206,7 @@ describe('ResourceView', function() {
 			var handler = sinon.stub().returnsArg(1);
 			transaction.subscribe(resource.type, 'query', handler);
 			var resview = resource.view(transaction);
-			var query = resview.findMany(transaction, {});
+			var query = resview.findMany({});
 			expect(handler).to.have.been.calledWith(resource, query);
 		});
 	});
@@ -219,7 +219,7 @@ describe('ResourceView', function() {
 			var resource = new Resource({ type: 'test', field: accessor });
 			var transaction = new Transaction(resource, response);
 			var resview = resource.view(transaction);
-			resview.serialize(transaction, object, function(err, resdata) {
+			resview.serialize(object, function(err, resdata) {
 				if (err) return done(err);
 				expect(accessor.serialize).to.have.been.called.once;
 				done();
@@ -236,7 +236,7 @@ describe('ResourceView', function() {
 			var resource = new Resource({ type: 'test', field: accessor });
 			var transaction = new Transaction(resource, response);
 			var resview = resource.view(transaction);
-			resview.deserialize(transaction, resdata, object, function(err, resdata) {
+			resview.deserialize(resdata, object, function(err, resdata) {
 				if (err) return done(err);
 				expect(accessor.deserialize).to.have.been.called.once;
 				done();
