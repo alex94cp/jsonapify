@@ -4,7 +4,8 @@
   "description": "A library for the development of JSON APIs",
   "main": "index.js",
   "scripts": {
-    "test": "mocha"
+    "test": "mocha",
+    "test-coverage": "./node_modules/.bin/istanbul cover ./node_modules/mocha/bin/_mocha"
   },
   "repository": {
     "type": "git",
@@ -28,6 +29,8 @@
   "homepage": "https://github.com/alex94puchades/jsonapify#readme",
   "devDependencies": {
     "chai": "^3.2.0",
+    "coveralls": "^2.11.3",
+    "istanbul": "^0.3.17",
     "mocha": "^2.2.5",
     "mongoose": "^4.0.8",
     "node-mocks-http": "^1.4.3",

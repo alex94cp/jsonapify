@@ -3,3 +3,5 @@ node_js:
   - "node"
   - "iojs"
 services: mongodb
+script: "npm run test-coverage"
+after_script: "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js"
