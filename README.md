@@ -12,7 +12,7 @@ jsonapify is a library to assist the development of JSON-API compatible APIs wit
 
 - __Simple__: jsonapify is designed around simplicity. *Easy things are easy to do, hard things are possible*. If you feel something can be made simpler, by all means [file an issue](https://github.com/alex94puchades/jsonapify/issues)!
 - __Unintrusive__: ExpressJS, Restify, Connect,... No matter, jsonapify integrates nicely.
-- __Interoperable__: By offering a common-interface across your APIs, jsonapify allows your users to build great things on top of them. If you don't know yet about the JSON-API specification, you should [read about it](http://jsonapi.org/) and all the oportunities it offers.
+- __Interoperable__: By offering a common-interface across your APIs, jsonapify lets your users build great things on top of them. If you don't know yet about the JSON-API specification, you should [read about it](http://jsonapi.org/) and all the oportunities it has to offer.
 - __Well tested__: jsonapify is designed from the start with unit testing in mind. Reliability is at the core of what we do.
 
 ## Declaring resources
