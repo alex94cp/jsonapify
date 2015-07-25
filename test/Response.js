@@ -1,5 +1,6 @@
 var expect = require('chai').expect;
-var ObjectId = require('mongodb').ObjectId;
+var mongoose = require('mongoose');
+var ObjectId = mongoose.Types.ObjectId;
 var httpMocks = require('node-mocks-http');
 
 var jsonapify = require('../');

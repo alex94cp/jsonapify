@@ -32,7 +32,6 @@
     "coveralls": "^2.11.3",
     "istanbul": "^0.3.17",
     "mocha": "^2.2.5",
-    "mongoose": "^4.0.8",
     "node-mocks-http": "^1.4.3",
     "sinon": "^1.15.4",
     "sinon-chai": "^2.8.0"
@@ -40,6 +39,6 @@
   "dependencies": {
     "async": "^1.4.0",
     "lodash": "^3.10.0",
-    "mongodb": "^2.0.39"
+    "mongoose": "^4.1.0"
   }
 }
