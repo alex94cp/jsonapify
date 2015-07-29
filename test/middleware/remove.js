@@ -8,7 +8,7 @@ var expect = chai.expect;
 
 var jsonapify = require('../../');
 var Resource = jsonapify.Resource;
-var remove = jsonapify.middleware.delete;
+var remove = jsonapify.middleware.remove;
 var ResourceNotFound = jsonapify.errors.ResourceNotFound;
 
 describe('remove', function() {
