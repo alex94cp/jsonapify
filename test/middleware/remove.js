@@ -8,15 +8,15 @@ var expect = chai.expect;
 
 var jsonapify = require('../../');
 var Resource = jsonapify.Resource;
-var _delete = jsonapify.middleware.delete;
+var remove = jsonapify.middleware.delete;
 var ResourceNotFound = jsonapify.errors.ResourceNotFound;
 
-describe('delete', function() {
+describe('remove', function() {
 	var model, resource, accessor, res;
 	before(function(done) {
 		mongoose.connect('mongodb://localhost/test', function(err) {
 			if (err) return done(err);
-			model = mongoose.model('DeleteTest', new mongoose.Schema);
+			model = mongoose.model('RemoveTest', new mongoose.Schema);
 			done();
 		});
 	});
@@ -38,7 +38,7 @@ describe('delete', function() {
 		model.create({}, function(err, object) {
 			if (err) return done(err);
 			var req = httpMocks.createRequest({ params: { id: object._id }});
-			_delete([resource, jsonapify.param('id')])(req, res, function(err) {
+			remove([resource, jsonapify.param('id')])(req, res, function(err) {
 				if (err) return done(err);
 				model.findById(object._id, function(err, object) {
 					if (err) return done(err);
@@ -51,7 +51,7 @@ describe('delete', function() {
 	
 	it('sends an error if resource does not exist', function(done) {
 		var req = httpMocks.createRequest({ params: { id: ObjectId() }});
-		_delete([resource, jsonapify.param('id')])(req, res, function(err) {
+		remove([resource, jsonapify.param('id')])(req, res, function(err) {
 			expect(err).to.be.an.instanceof(ResourceNotFound);
 			done();
 		});
@@ -66,7 +66,7 @@ describe('delete', function() {
 			});
 			var filter = sinon.spy();
 			var chain = [resource, jsonapify.param('id')];
-			_delete(chain, { filters: filter })(req, res, function(err) {
+			remove(chain, { filters: filter })(req, res, function(err) {
 				if (err) return done(err);
 				expect(filter).to.have.been.called.once;
 				done();
