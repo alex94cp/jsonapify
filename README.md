@@ -81,9 +81,9 @@ var userResource = new jsonapify.Resource(User, {
 As someone said, "nobody is an island". Resources are not islands, either. Linking resources in jsonapify is as easy as you'd expect:
 
 ```js
-var User = require('../models/User')
-;
+var User = require('../models/User');
 var roleResource = require('./roles').resource;
+
 var userResource = new jsonapify.Resource(User, {
 	type: 'users',
 	id: new jsonapify.Property('_id'),
