@@ -21,14 +21,36 @@ jsonapify is a library to assist the development of JSON-API compatible APIs wit
 jsonapify detaches mongoose models from the actual representation of the resources. This allows for a lot of flexibility: as a matter of fact, declaring a non-readable field is this elegant:
 
 ```js
-var User = require('../models');
+var User = require('../models/User');
+
 var userResource = new jsonapify.Resource(User, {
-	'type': 'users',
-	'id': new jsonapify.Property('_id'),
-	'attributes': {
-		'email': new jsonapify.Property('email'),
-		'password': {
+	type: 'users',
+	id: new jsonapify.Property('_id'),
+	attributes: {
+		email: new jsonapify.Property('email'),
+		password: {
 			value: new jsonapify.Property('password'),
+			readable: false,
+		},
+	},
+});
+```
+
+### ES6 in action
+
+This is how the previous example would look in ES6:
+
+```js
+import {Resource, Property} from 'jsonapify';
+import User from '../models';
+
+const userResource = new Resource(User, {
+	type: 'users',
+	id: new Property('_id'),
+	attributes: {
+		email: new Property('email'),
+		password: {
+			value: new Property('password'),
 			readable: false,
 		},
 	},
@@ -40,12 +62,13 @@ var userResource = new jsonapify.Resource(User, {
 [HATEOAS](https://en.wikipedia.org/wiki/HATEOAS) is one of the most important principles of the [REST](https://www.ics.uci.edu/~fielding/pubs/dissertation/rest_arch_style.htm) phylosophy. jsonapify makes interconnecting your resources a piece of cake:
 
 ```js
-var User = require('../models');
+var User = require('../models/User');
+
 var userResource = new jsonapify.Resource(User, {
-	'type': 'users',
-	'id': new jsonapify.Property('_id'),
-	'links': {
-		'self': {
+	type: 'users',
+	id: new jsonapify.Property('_id'),
+	links: {
+		self: {
 			value: new jsonapify.Template('/users/${_id}'),
 			writable: false,
 		},
@@ -58,13 +81,14 @@ var userResource = new jsonapify.Resource(User, {
 As someone said, "nobody is an island". Resources are not islands, either. Linking resources in jsonapify is as easy as you'd expect:
 
 ```js
-var User = require('../models');
+var User = require('../models/User')
+;
 var roleResource = require('./roles').resource;
 var userResource = new jsonapify.Resource(User, {
-	'type': 'users',
-	'id': new jsonapify.Property('_id'),
-	'relationships': {
-		'role': new jsonapify.Ref(roleResource, 'role'),
+	type: 'users',
+	id: new jsonapify.Property('_id'),
+	relationships: {
+		role: new jsonapify.Ref(roleResource, 'role'),
 	},
 });
 ```
