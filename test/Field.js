@@ -67,16 +67,15 @@ describe('Field', function() {
 		});
 	});
 	
-	describe('#adjustQuery', function() {
-		it('invokes adjustQuery method on accessor with arguments', function() {
-			var query = {};
-			var action = 'action';
+	describe('#accessProperty', function() {
+		it('invokes accessProperty method on accessor', function() {
+			var callback = sinon.spy();
 			var accessor = createAccessor();
-			accessor.adjustQuery.returns(true);
+			accessor.accessProperty.callsArgWith(0, 'property');
 			var field = new Field(resource, 'name', accessor);
-			var handled = field.adjustQuery(query, action);
-			expect(handled).to.be.true;
-			expect(accessor.adjustQuery).to.have.been.calledWith(query, action);
+			field.accessProperty(callback);
+			expect(accessor.accessProperty).to.have.been.calledWith(callback);
+			expect(callback).to.have.been.calledWith('property');
 		});
 	});
 	
@@ -191,7 +190,7 @@ function createTransaction(resource) {
 
 function createAccessor() {
 	return {
-		adjustQuery: sinon.stub(),
+		accessProperty: sinon.stub(),
 		serialize: sinon.stub(),
 		deserialize: sinon.stub(),
 	};

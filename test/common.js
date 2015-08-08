@@ -4,14 +4,13 @@ function createAccessor() {
 	return {
 		serialize: sinon.stub(),
 		deserialize: sinon.stub(),
-		adjustQuery: sinon.stub(),
+		accessProperty: sinon.stub(),
 	};
 }
 
 function initAccessor(accessor, value, object) {
 	accessor.serialize.callsArgWithAsync(3, null, value);
 	accessor.deserialize.callsArgWithAsync(4, null, object);
-	accessor.adjustQuery.returns(false);
 }
 
 exports.createAccessor = createAccessor;

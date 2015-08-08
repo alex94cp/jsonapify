@@ -161,7 +161,7 @@ describe('ResourceView', function() {
 			transaction.subscribe(resource.type, 'query', handler);
 			var resview = resource.view(transaction);
 			var query = resview.findOne({ _id: object._id });
-			expect(handler).to.have.been.calledWith(resource, query);
+			expect(handler).to.have.been.calledWith(resview, query);
 		});
 	});
 	
@@ -208,7 +208,7 @@ describe('ResourceView', function() {
 			transaction.subscribe(resource.type, 'query', handler);
 			var resview = resource.view(transaction);
 			var query = resview.findMany({});
-			expect(handler).to.have.been.calledWith(resource, query);
+			expect(handler).to.have.been.calledWith(resview, query);
 		});
 	});
 	
@@ -216,7 +216,7 @@ describe('ResourceView', function() {
 		it('invokes serialize method on field', function(done) {
 			var object = {};
 			var accessor = common.createAccessor();
-			accessor.serialize.callsArgWithAsync(3, null, 'value');
+			common.initAccessor(accessor, 'value', object);
 			var resource = new Resource({ type: 'test', field: accessor });
 			var transaction = new Transaction(resource, response);
 			var resview = resource.view(transaction);
@@ -233,7 +233,7 @@ describe('ResourceView', function() {
 			var object = {};
 			var accessor = common.createAccessor();
 			var resdata = { type: 'test', field: 'value' };
-			accessor.deserialize.callsArgWithAsync(4, null, object);
+			common.initAccessor(accessor, undefined, object);
 			var resource = new Resource({ type: 'test', field: accessor });
 			var transaction = new Transaction(resource, response);
 			var resview = resource.view(transaction);
