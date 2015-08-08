@@ -37,8 +37,8 @@
     "sinon-chai": "^2.8.0"
   },
   "dependencies": {
-    "async": "^1.4.0",
-    "lodash": "^3.10.0",
-    "mongoose": "^4.1.0"
+    "async": "^1.4.1",
+    "lodash": "^3.10.1",
+    "mongoose": "^4.1.1"
   }
 }
