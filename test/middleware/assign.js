@@ -88,7 +88,7 @@ describe('assign', function() {
 		});
 		var filter = sinon.spy();
 		var chain = [resource, { num: jsonapify.param('num') }];
-		assign(chain, { filters: filter })(req, res, function(err) {
+		assign(chain, { filters: [filter] })(req, res, function(err) {
 			if (err) return done(err);
 			expect(filter).to.have.been.called.once;
 			done();

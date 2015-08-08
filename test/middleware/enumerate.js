@@ -60,7 +60,7 @@ describe('enumerate', function() {
 		var filter = sinon.spy();
 		accessor.serialize.callsArgWithAsync(3, null, 'value');
 		accessor.deserialize.callsArgWithAsync(4, null);
-		enumerate(resource, { filters: filter })(req, res, function(err) {
+		enumerate(resource, { filters: [filter] })(req, res, function(err) {
 			if (err) return done(err);
 			expect(filter).to.have.been.called.once;
 			done();

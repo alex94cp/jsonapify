@@ -76,7 +76,7 @@ describe('create', function() {
 			body: { data: { type: 'test', field: 'value' }},
 		});
 		var filter = sinon.spy();
-		create(resource, { filters: filter })(req, res, function(err) {
+		create(resource, { filters: [filter] })(req, res, function(err) {
 			if (err) return done(err);
 			expect(filter).to.have.been.called.once;
 			done();

@@ -95,7 +95,7 @@ describe('update', function() {
 				body: { data: { type: 'test', field: 'after' }},
 			});
 			var chain = [resource, jsonapify.param('id')];
-			update(chain, { filters: filter })(req, res, function(err) {
+			update(chain, { filters: [filter] })(req, res, function(err) {
 				if (err) return done(err);
 				expect(filter).to.have.been.called.once;
 				done();

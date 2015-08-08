@@ -66,7 +66,7 @@ describe('remove', function() {
 			});
 			var filter = sinon.spy();
 			var chain = [resource, jsonapify.param('id')];
-			remove(chain, { filters: filter })(req, res, function(err) {
+			remove(chain, { filters: [filter] })(req, res, function(err) {
 				if (err) return done(err);
 				expect(filter).to.have.been.called.once;
 				done();

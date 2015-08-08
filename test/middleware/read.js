@@ -70,7 +70,7 @@ describe('read', function() {
 			accessor.deserialize.callsArgWithAsync(4, null);
 			var req = httpMocks.createRequest({ params: { id: object._id }});
 			var chain = [resource, jsonapify.param('id')];
-			read(chain, { filters: filter })(req, res, function(err) {
+			read(chain, { filters: [filter] })(req, res, function(err) {
 				if (err) return done(err);
 				expect(filter).to.have.been.called.once;
 				done();
