@@ -5,8 +5,8 @@ var jsonapify = require('../../');
 var Field = jsonapify.Field;
 var Resource = jsonapify.Resource;
 var Response = jsonapify.Response;
-var Transaction = jsonapify.Transaction;
 var Const = jsonapify.accessors.Const;
+var Transaction = jsonapify.Transaction;
 var InvalidFieldValue = jsonapify.errors.InvalidFieldValue;
 
 describe('Const', function() {
