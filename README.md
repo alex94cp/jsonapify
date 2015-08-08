@@ -78,7 +78,7 @@ var userResource = new jsonapify.Resource(User, {
 
 ## Linking resources
 
-As someone said, "nobody is an island". Resources are not islands, either. Linking resources in jsonapify is as easy as you'd expect:
+As someone said, "nobody is an island". Resources are not islands either. Linking resources in jsonapify is as easy as you'd expect:
 
 ```js
 var User = require('../models/User');
@@ -106,14 +106,7 @@ app.get('/users/', [
 
 ## Transaction filters
 
-In addition to all of the above, jsonapify also offers **transaction filters**. These filters enable per-request functionality, such as [pagination](http://jsonapi.org/format/#fetching-pagination), [sparse-fields](http://jsonapi.org/format/#fetching-sparse-fieldsets), [sorting](http://jsonapi.org/format/#fetching-sorting)... Enabling them is just a matter of setting an option param: 
-
-```js
-app.get('/users/', [
-	jsonapify.enumerate(userResource, { filters: jsonapify.paginate() }),
-	jsonapify.errorHandler(),
-]);
-```
+In addition to all of the above, jsonapify also offers **transaction filters**. These filters enable per-request functionality, such as [pagination](http://jsonapi.org/format/#fetching-pagination), [sparse-fields](http://jsonapi.org/format/#fetching-sparse-fieldsets), [sorting](http://jsonapi.org/format/#fetching-sorting)... The most common transaction filters are enabled by default, so you don't have to worry.
 
 ## Credits
 
