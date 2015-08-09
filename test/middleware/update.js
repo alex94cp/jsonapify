@@ -25,7 +25,10 @@ describe('update', function() {
 	
 	beforeEach(function() {
 		accessor = common.createAccessor();
-		resource = new Resource(model, { type: 'test', field: accessor });
+		resource = new Resource(model, {
+			type: 'test',
+			field: accessor,
+		});
 		res = httpMocks.createResponse();
 	});
 	
