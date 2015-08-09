@@ -288,7 +288,7 @@ describe('modify', function() {
 			});
 		});
 		
-		// BUG: jsonpatch does not throw if src path does not exist
+		// https://github.com/dharmafly/jsonpatch.js/issues/21
 		it.skip('gives an error if the value does not exist', function(done) {
 			model.create({}, function(err, object) {
 				if (err) return done(err);
