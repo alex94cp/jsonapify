@@ -1,6 +1,9 @@
 # Backup files
 *~
 
+# KDE directory folders
+.directory
+
 # Logs
 logs
 *.log
