@@ -25,11 +25,11 @@ describe('ResourceView', function() {
 			done();
 		});
 	});
-	
+
 	after(function(done) {
 		mongoose.disconnect(done);
 	});
-	
+
 	describe('#model', function() {
 		it('gives resource model', function() {
 			var resource = new Resource(model, { type: 'test' });
@@ -38,7 +38,7 @@ describe('ResourceView', function() {
 			expect(resview).to.have.property('model', resource.model);
 		});
 	});
-	
+
 	describe('#type', function() {
 		it('gives resource type', function() {
 			var resource = new Resource({ type: 'test' });
@@ -47,7 +47,7 @@ describe('ResourceView', function() {
 			expect(resview).to.have.property('type', resource.type);
 		});
 	});
-	
+
 	describe('#field', function() {
 		it('gives selected field', function() {
 			var resource = new Resource({ type: 'test', name: 'value' });
@@ -57,7 +57,7 @@ describe('ResourceView', function() {
 			expect(field).to.have.property('name', 'name');
 			expect(field).to.have.property('resource', resource);
 		});
-		
+
 		it('gives attribute field', function() {
 			var resource = new Resource({
 				type: 'test',
@@ -71,7 +71,7 @@ describe('ResourceView', function() {
 			expect(field).to.have.property('name', 'attributes.name');
 			expect(field).to.have.property('resource', resource);
 		});
-		
+
 		it('gives relationship field', function() {
 			var resource = new Resource({
 				type: 'test',
@@ -85,7 +85,7 @@ describe('ResourceView', function() {
 			expect(field).to.have.property('name', 'relationships.name');
 			expect(field).to.have.property('resource', resource);
 		});
-		
+
 		it('gives null if invalid field', function() {
 			var resource = new Resource({ type: 'test' });
 			var transaction = new Transaction(resource, response);
@@ -94,7 +94,7 @@ describe('ResourceView', function() {
 			expect(field).to.not.exist;
 		});
 	});
-	
+
 	describe('#select', function() {
 		it('includes only specified fields in view', function() {
 			var resource = new Resource({
@@ -109,29 +109,15 @@ describe('ResourceView', function() {
 			expect(resview.field('selected')).to.exist;
 			expect(resview.field('not-selected')).to.not.exist;
 		});
-		
-		it('always includes type field', function() {
-			var resource = new Resource({ type: 'test', name: 'value' });
-			var transaction = new Transaction(resource, response);
-			var resview = resource.view(transaction).select('name');
-			expect(resview.field('type')).to.exist;
-		});
-		
-		it('always includes id field', function() {
-			var resource = new Resource({ type: 'test', id: 'id', name: 'value' });
-			var transaction = new Transaction(resource, response);
-			var resview = resource.view(transaction).select('name');
-			expect(resview.field('id')).to.exist;
-		});
 	});
-	
+
 	describe('#findOne', function() {
 		var resource, transaction, object;
 		before(function() {
 			resource = new Resource(model, { type: 'test' });
 			transaction = new Transaction(resource, response);
 		});
-		
+
 		beforeEach(function(done) {
 			model.create({}, function(err, result) {
 				if (err) return done(err);
@@ -139,11 +125,11 @@ describe('ResourceView', function() {
 				done();
 			});
 		});
-		
+
 		afterEach(function(done) {
 			mongoose.connection.db.dropDatabase(done);
 		});
-		
+
 		it('retrieves mongoose document from the database', function(done) {
 			var resview = resource.view(transaction);
 			resview.findOne({ _id: object._id }, function(err, data) {
@@ -155,7 +141,7 @@ describe('ResourceView', function() {
 				done();
 			});
 		});
-		
+
 		it('runs transaction query handlers', function() {
 			var handler = sinon.stub().returnsArg(1);
 			transaction.subscribe(resource.type, 'query', handler);
@@ -164,14 +150,14 @@ describe('ResourceView', function() {
 			expect(handler).to.have.been.calledWith(resview, query);
 		});
 	});
-	
+
 	describe('#findMany', function() {
 		var resource, transaction, objects;
 		before(function() {
 			resource = new Resource(model, { type: 'test' });
 			transaction = new Transaction(resource, response);
 		});
-		
+
 		beforeEach(function(done) {
 			async.parallel([
 				function(next) { model.create({}, next); },
@@ -183,11 +169,11 @@ describe('ResourceView', function() {
 				done();
 			});
 		});
-		
+
 		afterEach(function(done) {
 			mongoose.connection.db.dropDatabase(done);
 		});
-		
+
 		it('retrieves mongoose documents from the database', function(done) {
 			var resview = resource.view(transaction);
 			resview.findMany({}, function(err, results) {
@@ -202,7 +188,7 @@ describe('ResourceView', function() {
 				done();
 			});
 		});
-		
+
 		it('runs transaction query handlers', function() {
 			var handler = sinon.stub().returnsArg(1);
 			transaction.subscribe(resource.type, 'query', handler);
@@ -211,7 +197,7 @@ describe('ResourceView', function() {
 			expect(handler).to.have.been.calledWith(resview, query);
 		});
 	});
-	
+
 	describe('#serialize', function() {
 		it('invokes serialize method on field', function(done) {
 			var object = {};
@@ -227,7 +213,7 @@ describe('ResourceView', function() {
 			});
 		});
 	});
-	
+
 	describe('#deserialize', function() {
 		it('invokes deserialize method on field', function(done) {
 			var object = {};
