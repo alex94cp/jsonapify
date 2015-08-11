@@ -11,7 +11,9 @@ var jsonapify = require('../../');
 var Resource = jsonapify.Resource;
 var Response = jsonapify.Response;
 var Transaction = jsonapify.Transaction;
-var paginate = jsonapify.filters.paginate;
+
+var PageStrategy = jsonapify.filters.pagination.PageStrategy;
+var OffsetStrategy = jsonapify.filters.pagination.OffsetStrategy;
 
 describe('paginate', function() {
 	var model, resource, transaction, objects;
@@ -22,7 +24,7 @@ describe('paginate', function() {
 			done();
 		});
 	});
-	
+
 	beforeEach(function(done) {
 		resource = new Resource(model, { type: 'test' });
 		async.parallel([
@@ -40,75 +42,154 @@ describe('paginate', function() {
 			done();
 		});
 	});
-	
+
 	afterEach(function(done) {
 		mongoose.connection.db.dropDatabase(done);
 	});
-	
+
 	after(function(done) {
 		mongoose.disconnect(done);
 	});
-	
-	it('paginates resources and adds pagination links', function(done) {
-		paginate()(transaction);
-		var req = httpMocks.createRequest({
-			query: { page: { number: 2, size: 2 }}
+
+	describe('PageStrategy', function() {
+		var filter;
+		before(function() {
+			filter = jsonapify.filters.paginate(new PageStrategy);
 		});
-		transaction.notify(resource, 'start', req);
-		var resview = resource.view(transaction);
-		resview.findMany({}, function(err, results) {
-			if (err) return done(err);
-			expect(results).to.have.length(2);
-			var response = transaction.response;
-			response.meta['count'] = objects.length;
-			transaction.notify(resource, 'end');
-			expect(response).to.have.deep.property('links.first');
-			expect(response).to.have.deep.property('links.last');
-			expect(response).to.have.deep.property('links.prev');
-			expect(response).to.have.deep.property('links.next');
-			done();
+
+		beforeEach(function() {
+			filter(transaction);
+		});
+
+		it('paginates resources and adds pagination links', function(done) {
+			var req = httpMocks.createRequest({
+				query: { page: { number: 2, size: 2 }}
+			});
+			transaction.notify(resource, 'start', req);
+			var resview = resource.view(transaction);
+			resview.findMany({}, function(err, results) {
+				if (err) return done(err);
+				expect(results).to.have.length(2);
+				var response = transaction.response;
+				response.meta['count'] = objects.length;
+				transaction.notify(resource, 'end');
+				expect(response).to.have.deep.property('links.first');
+				expect(response).to.have.deep.property('links.last');
+				expect(response).to.have.deep.property('links.prev');
+				expect(response).to.have.deep.property('links.next');
+				done();
+			});
+		});
+
+		it('omits prev link if first page selected', function(done) {
+			var req = httpMocks.createRequest({
+				query: { page: { number: 1, size: 2 }}
+			});
+			transaction.notify(resource, 'start', req);
+			var resview = resource.view(transaction);
+			resview.findMany({}, function(err, results) {
+				if (err) return done(err);
+				expect(results).to.have.length(2);
+				var response = transaction.response;
+				response.meta['count'] = objects.length;
+				transaction.notify(resource, 'end');
+				expect(response).to.have.deep.property('links.first');
+				expect(response).to.have.deep.property('links.last');
+				expect(response).to.not.have.deep.property('links.prev');
+				expect(response).to.have.deep.property('links.next');
+				done();
+			});
+		});
+
+		it('omits next link if last page selected', function(done) {
+			var req = httpMocks.createRequest({
+				query: { page: { number: objects.length - 2, size: 2 }}
+			});
+			transaction.notify(resource, 'start', req);
+			var resview = resource.view(transaction);
+			resview.findMany({}, function(err, results) {
+				if (err) return done(err);
+				expect(results).to.have.length.of.most(2);
+				var response = transaction.response;
+				response.meta['count'] = objects.length;
+				transaction.notify(resource, 'end');
+				expect(response).to.have.deep.property('links.first');
+				expect(response).to.have.deep.property('links.last');
+				expect(response).to.have.deep.property('links.prev');
+				expect(response).to.not.have.deep.property('links.next');
+				done();
+			});
 		});
 	});
-	
-	it('omits prev link if first page selected', function(done) {
-		paginate()(transaction);
-		var req = httpMocks.createRequest({
-			query: { page: { number: 1, size: 2 }}
+
+	describe('OffsetStrategy', function() {
+		var filter;
+		before(function() {
+			filter = jsonapify.filters.paginate(new OffsetStrategy);
 		});
-		transaction.notify(resource, 'start', req);
-		var resview = resource.view(transaction);
-		resview.findMany({}, function(err, results) {
-			if (err) return done(err);
-			expect(results).to.have.length(2);
-			var response = transaction.response;
-			response.meta['count'] = objects.length;
-			transaction.notify(resource, 'end');
-			expect(response).to.have.deep.property('links.first');
-			expect(response).to.have.deep.property('links.last');
-			expect(response).to.not.have.deep.property('links.prev');
-			expect(response).to.have.deep.property('links.next');
-			done();
+
+		beforeEach(function() {
+			filter(transaction);
 		});
-	});
-	
-	it('omits next link if last page selected', function(done) {
-		paginate()(transaction);
-		var req = httpMocks.createRequest({
-			query: { page: { number: 3, size: 2 }}
+
+		it('paginates resources and adds pagination links', function(done) {
+			var req = httpMocks.createRequest({
+				query: { page: { offset: 1, limit: 2 }}
+			});
+			transaction.notify(resource, 'start', req);
+			var resview = resource.view(transaction);
+			resview.findMany({}, function(err, results) {
+				if (err) return done(err);
+				expect(results).to.have.length(2);
+				var response = transaction.response;
+				response.meta['count'] = objects.length;
+				transaction.notify(resource, 'end');
+				expect(response).to.have.deep.property('links.first');
+				expect(response).to.have.deep.property('links.last');
+				expect(response).to.have.deep.property('links.prev');
+				expect(response).to.have.deep.property('links.next');
+				done();
+			});
 		});
-		transaction.notify(resource, 'start', req);
-		var resview = resource.view(transaction);
-		resview.findMany({}, function(err, results) {
-			if (err) return done(err);
-			expect(results).to.have.length.of.most(2);
-			var response = transaction.response;
-			response.meta['count'] = objects.length;
-			transaction.notify(resource, 'end');
-			expect(response).to.have.deep.property('links.first');
-			expect(response).to.have.deep.property('links.last');
-			expect(response).to.have.deep.property('links.prev');
-			expect(response).to.not.have.deep.property('links.next');
-			done();
+
+		it('omits prev link if first page selected', function(done) {
+			var req = httpMocks.createRequest({
+				query: { page: { offset: 0, limit: 2 }}
+			});
+			transaction.notify(resource, 'start', req);
+			var resview = resource.view(transaction);
+			resview.findMany({}, function(err, results) {
+				if (err) return done(err);
+				expect(results).to.have.length(2);
+				var response = transaction.response;
+				response.meta['count'] = objects.length;
+				transaction.notify(resource, 'end');
+				expect(response).to.have.deep.property('links.first');
+				expect(response).to.have.deep.property('links.last');
+				expect(response).to.not.have.deep.property('links.prev');
+				expect(response).to.have.deep.property('links.next');
+				done();
+			});
+		});
+
+		it('omits next link if last page selected', function(done) {
+			var req = httpMocks.createRequest({
+				query: { page: { offset: objects.length - 2, limit: 2 }}
+			});
+			transaction.notify(resource, 'start', req);
+			var resview = resource.view(transaction);
+			resview.findMany({}, function(err, results) {
+				if (err) return done(err);
+				expect(results).to.have.length.of.most(2);
+				var response = transaction.response;
+				response.meta['count'] = objects.length;
+				transaction.notify(resource, 'end');
+				expect(response).to.have.deep.property('links.first');
+				expect(response).to.have.deep.property('links.last');
+				expect(response).to.have.deep.property('links.prev');
+				expect(response).to.not.have.deep.property('links.next');
+				done();
+			});
 		});
 	});
 });
