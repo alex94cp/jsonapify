@@ -12,12 +12,12 @@ var Resource = jsonapify.Resource;
 var Response = jsonapify.Response;
 var Transaction = jsonapify.Transaction;
 
-describe('paginate', function() {
+describe('paginateOffset', function() {
 	var model, resource, transaction, objects;
 	before(function(done) {
 		mongoose.connect('mongodb://localhost/test', function(err) {
 			if (err) return done(err);
-			model = mongoose.model('PaginateTest', new mongoose.Schema);
+			model = mongoose.model('PaginateOffsetTest', new mongoose.Schema);
 			done();
 		});
 	});
@@ -36,7 +36,7 @@ describe('paginate', function() {
 			var res = httpMocks.createResponse();
 			var response = new Response(res);
 			transaction = new Transaction(resource, response);
-			jsonapify.filters.paginate()(transaction);
+			jsonapify.filters.paginateOffset()(transaction);
 			done();
 		});
 	});
@@ -51,7 +51,7 @@ describe('paginate', function() {
 
 	it('paginates resources and adds pagination links', function(done) {
 		var req = httpMocks.createRequest({
-			query: { page: { number: 2, size: 2 }}
+			query: { page: { offset: 1, limit: 2 }}
 		});
 		transaction.notify(resource, 'start', req);
 		var resview = resource.view(transaction);
@@ -71,7 +71,7 @@ describe('paginate', function() {
 
 	it('omits prev link if first page selected', function(done) {
 		var req = httpMocks.createRequest({
-			query: { page: { number: 1, size: 2 }}
+			query: { page: { offset: 0, limit: 2 }}
 		});
 		transaction.notify(resource, 'start', req);
 		var resview = resource.view(transaction);
@@ -91,7 +91,7 @@ describe('paginate', function() {
 
 	it('omits next link if last page selected', function(done) {
 		var req = httpMocks.createRequest({
-			query: { page: { number: objects.length - 2, size: 2 }}
+			query: { page: { offset: objects.length - 2, limit: 2 }}
 		});
 		transaction.notify(resource, 'start', req);
 		var resview = resource.view(transaction);
