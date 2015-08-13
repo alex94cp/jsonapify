@@ -11,7 +11,6 @@ var jsonapify = require('../../');
 var Resource = jsonapify.Resource;
 var Response = jsonapify.Response;
 var Transaction = jsonapify.Transaction;
-var select = jsonapify.filters.select;
 
 describe('select', function() {
 	var resource, accessors, transaction;
@@ -33,10 +32,10 @@ describe('select', function() {
 		common.initAccessor(accessors.id, new ObjectId);
 		common.initAccessor(accessors.selected, 'value');
 		common.initAccessor(accessors.notSelected, 'value');
+		jsonapify.filters.select()(transaction);
 	});
 
 	it('makes resource views contain only selected fields', function(done) {
-		select()(transaction);
 		var req = httpMocks.createRequest({ query: { fields: ['selected'] }});
 		transaction.notify(resource, 'start', req);
 		var resview = resource.view(transaction);
@@ -49,7 +48,6 @@ describe('select', function() {
 	});
 
 	it('type and id fields are included implicitly', function(done) {
-		select()(transaction);
 		var req = httpMocks.createRequest({ query: { fields: [] }});
 		transaction.notify(resource, 'start', req);
 		var resview = resource.view(transaction);
@@ -62,7 +60,6 @@ describe('select', function() {
 	});
 
 	it('selects a given resource type fields', function(done) {
-		select()(transaction);
 		var req = httpMocks.createRequest({
 			query: { fields: { test: 'selected' }},
 		});
