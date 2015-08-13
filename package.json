@@ -29,7 +29,7 @@
   "homepage": "https://github.com/alex94puchades/jsonapify#readme",
   "devDependencies": {
     "chai": "^3.2.0",
-    "coveralls": "^2.11.3",
+    "coveralls": "^2.11.4",
     "istanbul": "^0.3.17",
     "mocha": "^2.2.5",
     "node-mocks-http": "^1.4.3",
@@ -37,10 +37,10 @@
     "sinon-chai": "^2.8.0"
   },
   "dependencies": {
-    "async": "^1.4.1",
-    "glob2re": "^1.0.0",
+    "async": "^1.4.2",
+    "glob2re": "^1.0.1",
     "jsonpatch": "^1.0.1",
     "lodash": "^3.10.1",
-    "mongoose": "^4.1.1"
+    "mongoose": "^4.1.2"
   }
 }
