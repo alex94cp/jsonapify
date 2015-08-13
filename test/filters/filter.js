@@ -229,7 +229,7 @@ describe('filter', function() {
 		});
 	});
 
-	describe('strMatchFilter', function() {
+	describe.skip('strMatchFilter', function() {
 		it('gives only results whose fields match expression', function(done) {
 			async.parallel([
 				function(next) { model.create({ string: 'aac12' }, next) },
