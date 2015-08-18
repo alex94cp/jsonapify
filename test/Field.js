@@ -1,14 +1,11 @@
 var chai = require('chai');
 var sinon = require('sinon');
-var httpMocks = require('node-mocks-http');
 chai.use(require('sinon-chai'));
 var expect = chai.expect;
 
-var jsonapify = require('../');
-var Field = jsonapify.Field;
-var Response = jsonapify.Response;
-var Resource = jsonapify.Resource;
-var Transaction = jsonapify.Transaction;
+var common = require('./common');
+var Field = require('../lib/Field');
+var Resource = require('../lib/Resource');
 
 describe('Field', function() {
 	var resource;
@@ -70,7 +67,7 @@ describe('Field', function() {
 	describe('#accessProperty', function() {
 		it('invokes accessProperty method on accessor', function() {
 			var callback = sinon.spy();
-			var accessor = createAccessor();
+			var accessor = common.createAccessor();
 			accessor.accessProperty.callsArgWith(0, 'property');
 			var field = new Field(resource, 'name', accessor);
 			field.accessProperty(callback);
@@ -83,7 +80,7 @@ describe('Field', function() {
 		var transaction, object;
 		beforeEach(function() {
 			object = {};
-			transaction = createTransaction(resource);
+			transaction = common.createTransaction(resource);
 		});
 		
 		it('gives constant value in callback', function(done) {
@@ -98,7 +95,7 @@ describe('Field', function() {
 		
 		it('invokes serialize method on accessor', function(done) {
 			var expected = 'value';
-			var accessor = createAccessor();
+			var accessor = common.createAccessor();
 			accessor.serialize.callsArgWithAsync(3, null, expected);
 			var field = new Field(resource, 'name', accessor);
 			field.serialize(transaction, object, function(err, value) {
@@ -122,7 +119,7 @@ describe('Field', function() {
 	describe('#deserialize', function() {
 		var transaction, object;
 		beforeEach(function() {
-			transaction = createTransaction(resource);
+			transaction = common.createTransaction(resource);
 			object = {};
 		});
 		
@@ -151,7 +148,7 @@ describe('Field', function() {
 		
 		it('invokes deserialize method on accessor', function(done) {
 			var expected = 'value';
-			var accessor = createAccessor();
+			var accessor = common.createAccessor();
 			accessor.deserialize.callsArgWithAsync(4, null, object);
 			var field = new Field(resource, 'name', accessor);
 			field.deserialize(transaction, expected, object, function(err, output) {
@@ -181,17 +178,3 @@ describe('Field', function() {
 		});
 	});
 });
-
-function createTransaction(resource) {
-	var res = httpMocks.createResponse();
-	var response = new Response(res);
-	return new Transaction(resource, response);
-}
-
-function createAccessor() {
-	return {
-		accessProperty: sinon.stub(),
-		serialize: sinon.stub(),
-		deserialize: sinon.stub(),
-	};
-}

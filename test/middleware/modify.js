@@ -23,6 +23,7 @@ describe('modify', function() {
 	
 	beforeEach(function() {
 		accessors = {
+			foo: new jsonapify.Accessor,
 			field: common.createAccessor(),
 			output: common.createAccessor(),
 		};
@@ -38,8 +39,6 @@ describe('modify', function() {
 			},
 		});
 		res = httpMocks.createResponse();
-		common.initAccessor(accessors.field);
-		common.initAccessor(accessors.output);
 	});
 	
 	afterEach(function(done) {
@@ -54,7 +53,8 @@ describe('modify', function() {
 		it('inserts element in array at index', function(done) {
 			model.create({}, function(err, object) {
 				if (err) return done(err);
-				common.initAccessor(accessors.field, ['a', 'c'], object);
+				common.initAccessor(accessors.field, ['a', 'c']);
+				common.initAccessor(accessors.output, undefined, object);
 				var req = httpMocks.createRequest({
 					params: { id: object._id.toString() },
 					body: {
@@ -78,7 +78,8 @@ describe('modify', function() {
 		it('adds new property to object', function(done) {
 			model.create({}, function(err, object) {
 				if (err) return done(err);
-				common.initAccessor(accessors.field, undefined, object);
+				common.initAccessor(accessors.field);
+				common.initAccessor(accessors.output);
 				var req = httpMocks.createRequest({
 					params: { id: object._id.toString() },
 					body: {
@@ -102,7 +103,8 @@ describe('modify', function() {
 		it('replaces existing object property', function(done) {
 			model.create({}, function(err, object) {
 				if (err) return done(err);
-				common.initAccessor(accessors.field, 'prev', object);
+				common.initAccessor(accessors.field, 'prev');
+				common.initAccessor(accessors.output);
 				var req = httpMocks.createRequest({
 					params: { id: object._id.toString() },
 					body: {
@@ -128,7 +130,8 @@ describe('modify', function() {
 		it('removes the value at the target location', function(done) {
 			model.create({}, function(err, object) {
 				if (err) return done(err);
-				common.initAccessor(accessors.field, 'value', object);
+				common.initAccessor(accessors.field, 'value');
+				common.initAccessor(accessors.output);
 				var req = httpMocks.createRequest({
 					params: { id: object._id.toString() },
 					body: {
@@ -150,6 +153,8 @@ describe('modify', function() {
 		it('gives an error if the value does not exist', function(done) {
 			model.create({}, function(err, object) {
 				if (err) return done(err);
+				common.initAccessor(accessors.field);
+				common.initAccessor(accessors.output);
 				var req = httpMocks.createRequest({
 					params: { id: object._id.toString() },
 					body: {
@@ -171,7 +176,8 @@ describe('modify', function() {
 		it('replaces the value at the target location', function(done) {
 			model.create({}, function(err, object) {
 				if (err) return done(err);
-				common.initAccessor(accessors.field, 'prev', object);
+				common.initAccessor(accessors.field, 'prev');
+				common.initAccessor(accessors.output);
 				var req = httpMocks.createRequest({
 					params: { id: object._id.toString() },
 					body: {
@@ -195,6 +201,8 @@ describe('modify', function() {
 		it('gives an error if the value does not exist', function(done) {
 			model.create({}, function(err, object) {
 				if (err) return done(err);
+				common.initAccessor(accessors.field);
+				common.initAccessor(accessors.output);
 				var req = httpMocks.createRequest({
 					params: { id: object._id.toString() },
 					body: {
@@ -216,8 +224,8 @@ describe('modify', function() {
 		it('removes the value from path and adds it to the target location', function(done) {
 			model.create({}, function(err, object) {
 				if (err) return done(err);
-				common.initAccessor(accessors.field, 'value', object);
-				common.initAccessor(accessors.output, undefined, object);
+				common.initAccessor(accessors.field, 'value');
+				common.initAccessor(accessors.output);
 				var req = httpMocks.createRequest({
 					params: { id: object._id.toString() },
 					body: {
@@ -242,6 +250,8 @@ describe('modify', function() {
 		it('gives an error if the value does not exist', function(done) {
 			model.create({}, function(err, object) {
 				if (err) return done(err);
+				common.initAccessor(accessors.field);
+				common.initAccessor(accessors.output);
 				var req = httpMocks.createRequest({
 					params: { id: object._id.toString() },
 					body: {
@@ -264,8 +274,8 @@ describe('modify', function() {
 		it('copies the value from path to the target location', function(done) {
 			model.create({}, function(err, object) {
 				if (err) return done(err);
-				common.initAccessor(accessors.field, 'value', object);
-				common.initAccessor(accessors.output, undefined, object);
+				common.initAccessor(accessors.field, 'value');
+				common.initAccessor(accessors.output);
 				var req = httpMocks.createRequest({
 					params: { id: object._id.toString() },
 					body: {
@@ -292,6 +302,8 @@ describe('modify', function() {
 		it.skip('gives an error if the value does not exist', function(done) {
 			model.create({}, function(err, object) {
 				if (err) return done(err);
+				common.initAccessor(accessors.field);
+				common.initAccessor(accessors.output);
 				var req = httpMocks.createRequest({
 					params: { id: object._id.toString() },
 					body: {
@@ -314,7 +326,8 @@ describe('modify', function() {
 		it('tests that value at path is equal to value', function(done) {
 			model.create({}, function(err, object) {
 				if (err) return done(err);
-				common.initAccessor(accessors.field, 'expected', object);
+				common.initAccessor(accessors.field, 'expected');
+				common.initAccessor(accessors.output);
 				var req = httpMocks.createRequest({
 					params: { id: object._id.toString() },
 					body: {
@@ -338,7 +351,8 @@ describe('modify', function() {
 		it('gives an error if values do not match', function(done) {
 			model.create({}, function(err, object) {
 				if (err) return done(err);
-				common.initAccessor(accessors.field, 'value', object);
+				common.initAccessor(accessors.field, 'value');
+				common.initAccessor(accessors.output);
 				var req = httpMocks.createRequest({
 					params: { id: object._id.toString() },
 					body: {
@@ -359,6 +373,8 @@ describe('modify', function() {
 		it('gives an error if the value does not exist', function(done) {
 			model.create({}, function(err, object) {
 				if (err) return done(err);
+				common.initAccessor(accessors.field);
+				common.initAccessor(accessors.output);
 				var req = httpMocks.createRequest({
 					params: { id: object._id.toString() },
 					body: {
