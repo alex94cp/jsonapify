@@ -5,6 +5,7 @@ var httpMocks = require('node-mocks-http');
 
 var jsonapify = require('../../');
 var Field = jsonapify.Field;
+var Registry = jsonapify.Registry;
 var Resource = jsonapify.Resource;
 var Response = jsonapify.Response;
 var Transaction = jsonapify.Transaction;
@@ -21,32 +22,36 @@ describe('Ref', function() {
 			done();
 		});
 	});
-	
+
 	beforeEach(function() {
 		var res = httpMocks.createResponse();
 		resource = new Resource({ type: 'test' });
+		Registry.add('test', resource);
 		var response = new Response(resource, res);
 		transaction = new Transaction(resource, response);
 		linkedResource = new Resource(linkedModel, {
 			type: 'linked',
 			id: new Property('_id'),
 		});
+		Registry.add('linked', linkedResource);
 	});
-	
+
 	afterEach(function(done) {
 		mongoose.connection.db.dropDatabase(done);
+		Registry.remove('test');
+		Registry.remove('linked');
 	});
-	
+
 	after(function(done) {
 		mongoose.disconnect(done);
 	});
-	
+
 	describe('#serialize', function() {
 		it('invokes callback with resource link', function(done) {
 			linkedModel.create({}, function(err, linked) {
 				if (err) return done(err);
 				var object = { link: linked._id };
-				var accessor = new Ref(linkedResource, 'link');
+				var accessor = new Ref('linked', 'link');
 				var field = new Field(resource, 'name', accessor);
 				accessor.serialize(field, transaction, object, function(err, resdata) {
 					if (err) return done(err);
@@ -59,12 +64,12 @@ describe('Ref', function() {
 				});
 			});
 		});
-		
+
 		it('includes linked resource in response', function(done) {
 			linkedModel.create({}, function(err, linked) {
 				if (err) return done(err);
 				var object = { link: linked._id };
-				var accessor = new Ref(linkedResource, 'link');
+				var accessor = new Ref('linked', 'link');
 				var field = new Field(resource, 'name', accessor);
 				accessor.serialize(field, transaction, object, function(err, resdata) {
 					if (err) return done(err);
@@ -80,16 +85,16 @@ describe('Ref', function() {
 			});
 		});
 	});
-	
+
 	describe('#deserialize', function() {
 		var object;
 		beforeEach(function() {
 			object = {};
 		});
-		
+
 		it('sets document property from resource field', function(done) {
 			var id = new ObjectId();
-			var accessor = new Ref(linkedResource, 'link');
+			var accessor = new Ref('linked', 'link');
 			var field = new Field(resource, 'name', accessor);
 			var resdata = { type: 'linked', id: id.toString() };
 			accessor.deserialize(field, transaction, resdata, object, function(err, output) {
