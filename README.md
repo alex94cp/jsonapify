@@ -118,18 +118,27 @@ app.get('/users/', [
 
 Everything in REST is a resource. Resources can have subresources, too. That means that you can apply a READ operation (GET verb in REST terms) to a subresource. Let's see how resource addressing works in jsonapify.
 
-* Resource chains come in the form of \[\(typename, \[selector\]\)+\].
+* Resource chains come in the form of **\[\(typename, \[selector\]\)+\]**.
 * Resource chain selectors are applied at request-time, and they select a subset of objects of the preceeding resource type.
 * At this moment, selectors can get info from:
     - Request params: `jsonapify.param(...)`
     - Request query params: `jsonapify.query(...)`
     - Resource parent object: `jsonapify.parent(...)`
 * There are **partial** and **full** resource chains. A full resource chain maps to a single resource object, whereas a partial resource chain (the ones missing the trailing selector) map to a subset of resource objects.
-* Some jsonapify operations require full resource chains (ie: READ, UPDATE,...) and others require partial resource chains (only CREATE atm).
+* Some jsonapify operations require full resource chains (ie: READ, UPDATE,...), while others require partial resource chains (only CREATE at this moment).
 
 For example, the following would be examples of resource chains:
-* Full chain: `['UserGroup', { name: jsonapify.param('name') }, 'User', jsonapify.param('id')]`
-* Partial chain: `['UserGroup', { name: jsonapify.param('name') }, 'User' ]`
+
+* Full chain:
+`[
+	'UserGroup', { name: jsonapify.param('name') },
+	'User', jsonapify.param('id'),
+]`
+
+* Partial chain:
+`[
+	'UserGroup', { name: jsonapify.param('name') }, 'User'
+]`
 
 **Note**: While jsonapify subresource addressing is functional, it is not polished enough to be considered production-ready (think of error reporting, usability...) If you ever encounter a bug, please [file an issue](https://github.com/alex94puchades/jsonapify/issues) and it will get assigned a high priority.
 
