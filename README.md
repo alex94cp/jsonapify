@@ -101,6 +101,8 @@ var userResource = new jsonapify.Resource(User, {
 jsonapify.Registry.add('User', userResource);
 ```
 
+**Note**: __*related resources* are not *subresources*__. Subresources are resource-like objects so tightly linked to their parent resource that they can't exist on their own. jsonapify does not support access of related resources as subresources. This is by-design.
+
 ## Exposing resources
 
 We all know about [DRY](https://en.wikipedia.org/wiki/Don%27t_repeat_yourself). But then, why do we keep writing the same endpoint boilerplate again and again? jsonapify offers all [CRUD operations](https://en.wikipedia.org/wiki/Create,_read,_update_and_delete) as connect-compatible middleware. That means plugging a new endpoint is as simple as it gets:
@@ -111,6 +113,25 @@ app.get('/users/', [
 	jsonapify.errorHandler()
 ]);
 ```
+
+## Middleware and resource addressing
+
+Everything in REST is a resource. Resources can have subresources, too. That means that you can apply a READ operation (GET verb in REST terms) to a subresource. Let's see how resource addressing works in jsonapify.
+
+* Resource chains come in the form of \[\(typename, \[selector\]\)+\].
+* Resource chain selectors are applied at request-time, and they select a subset of objects of the preceeding resource type.
+* At this moment, selectors can get info from:
+    - Request params: `jsonapify.param(...)`
+    - Request query params: `jsonapify.query(...)`
+    - Resource parent object: `jsonapify.parent(...)`
+* There are **partial** and **full** resource chains. A full resource chain maps to a single resource object, whereas a partial resource chain (the ones missing the trailing selector) map to a subset of resource objects.
+* Some jsonapify operations require full resource chains (ie: READ, UPDATE,...) and others require partial resource chains (only CREATE atm).
+
+For example, the following would be examples of resource chains:
+* Full chain: `['UserGroup', { name: jsonapify.param('name') }, 'User', jsonapify.param('id')]`
+* Partial chain: `['UserGroup', { name: jsonapify.param('name') }, 'User' ]`
+
+**Note**: While jsonapify subresource addressing is functional, it is not polished enough to be considered production-ready (think of error reporting, usability...) If you ever encounter a bug, please [file an issue](https://github.com/alex94puchades/jsonapify/issues) and it will get assigned a high priority.
 
 ## Transaction filters
 
