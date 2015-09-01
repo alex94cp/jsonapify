@@ -101,7 +101,7 @@ var userResource = new jsonapify.Resource(User, {
 jsonapify.Registry.add('User', userResource);
 ```
 
-**Note**: __*related resources* are not *subresources*__. Subresources are resource-like objects so tightly linked to their parent resource that they can't exist on their own. jsonapify does not support access of related resources as subresources. This is by-design.
+**Note**: **_related resources_ are not _subresources_**. Subresources are resource-like objects so tightly linked to their parent resource that they can't exist on their own. jsonapify does not support access of related resources as subresources. This is by-design.
 
 ## Exposing resources
 
@@ -130,15 +130,19 @@ Everything in REST is a resource. Resources can have subresources, too. That mea
 For example, the following would be examples of resource chains:
 
 * Full chain:
-`[
+```js
+[
 	'UserGroup', { name: jsonapify.param('name') },
 	'User', jsonapify.param('id'),
-]`
+]
+```
 
 * Partial chain:
-`[
+```js
+[
 	'UserGroup', { name: jsonapify.param('name') }, 'User'
-]`
+]
+```
 
 **Note**: While jsonapify subresource addressing is functional, it is not polished enough to be considered production-ready (think of error reporting, usability...) If you ever encounter a bug, please [file an issue](https://github.com/alex94puchades/jsonapify/issues) and it will get assigned a high priority.
 
