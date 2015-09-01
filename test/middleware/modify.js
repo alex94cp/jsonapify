@@ -9,6 +9,7 @@ var expect = chai.expect;
 var common = require('../common');
 var jsonapify = require('../../');
 var Resource = jsonapify.Resource;
+var Registry = jsonapify.Registry;
 var modify = jsonapify.middleware.modify;
 
 describe('modify', function() {
@@ -38,10 +39,12 @@ describe('modify', function() {
 				nullable: true,
 			},
 		});
+		Registry.add('ModifyResource', resource);
 		res = httpMocks.createResponse();
 	});
 	
 	afterEach(function(done) {
+		Registry.remove('ModifyResource');
 		mongoose.connection.db.dropDatabase(done);
 	});
 	
@@ -65,7 +68,8 @@ describe('modify', function() {
 						}],
 					},
 				});
-				modify([resource, jsonapify.param('id')])(req, res, function(err) {
+				var chain = ['ModifyResource', jsonapify.param('id')];
+				modify(chain)(req, res, function(err) {
 					if (err) return done(err);
 					var resdata = JSON.parse(res._getData());
 					expect(resdata).to.have.deep.property('data.field');
@@ -90,7 +94,8 @@ describe('modify', function() {
 						}],
 					},
 				});
-				modify([resource, jsonapify.param('id')])(req, res, function(err) {
+				var chain = ['ModifyResource', jsonapify.param('id')];
+				modify(chain)(req, res, function(err) {
 					if (err) return done(err);
 					var resdata = JSON.parse(res._getData());
 					expect(resdata).to.have.deep.property('data.field');
@@ -115,7 +120,8 @@ describe('modify', function() {
 						}],
 					},
 				});
-				modify([resource, jsonapify.param('id')])(req, res, function(err) {
+				var chain = ['ModifyResource', jsonapify.param('id')];
+				modify(chain)(req, res, function(err) {
 					if (err) return done(err);
 					var resdata = JSON.parse(res._getData());
 					expect(resdata).to.have.deep.property('data.field');
@@ -141,7 +147,8 @@ describe('modify', function() {
 						}],
 					},
 				});
-				modify([resource, jsonapify.param('id')])(req, res, function(err) {
+				var chain = ['ModifyResource', jsonapify.param('id')];
+				modify(chain)(req, res, function(err) {
 					if (err) return done(err);
 					var resdata = JSON.parse(res._getData());
 					expect(resdata).to.not.have.deep.property('data.field');
@@ -164,7 +171,8 @@ describe('modify', function() {
 						}],
 					},
 				});
-				modify([resource, jsonapify.param('id')])(req, res, function(err) {
+				var chain = ['ModifyResource', jsonapify.param('id')];
+				modify(chain)(req, res, function(err) {
 					expect(err).to.exist;
 					done();
 				});
@@ -188,7 +196,8 @@ describe('modify', function() {
 						}],
 					},
 				});
-				modify([resource, jsonapify.param('id')])(req, res, function(err) {
+				var chain = ['ModifyResource', jsonapify.param('id')];
+				modify(chain)(req, res, function(err) {
 					if (err) return done(err);
 					var resdata = JSON.parse(res._getData());
 					expect(resdata).to.have.deep.property('data.field');
@@ -212,7 +221,8 @@ describe('modify', function() {
 						}],
 					},
 				});
-				modify([resource, jsonapify.param('id')])(req, res, function(err) {
+				var chain = ['ModifyResource', jsonapify.param('id')];
+				modify(chain)(req, res, function(err) {
 					expect(err).to.exist;
 					done();
 				});
@@ -236,7 +246,8 @@ describe('modify', function() {
 						}],
 					},
 				});
-				modify([resource, jsonapify.param('id')])(req, res, function(err) {
+				var chain = ['ModifyResource', jsonapify.param('id')];
+				modify(chain)(req, res, function(err) {
 					if (err) return done(err);
 					var resdata = JSON.parse(res._getData());
 					expect(resdata).to.not.have.deep.property('data.field');
@@ -262,7 +273,8 @@ describe('modify', function() {
 						}],
 					},
 				});
-				modify([resource, jsonapify.param('id')])(req, res, function(err) {
+				var chain = ['ModifyResource', jsonapify.param('id')];
+				modify(chain)(req, res, function(err) {
 					expect(err).to.exist;
 					done();
 				});
@@ -286,7 +298,8 @@ describe('modify', function() {
 						}],
 					},
 				});
-				modify([resource, jsonapify.param('id')])(req, res, function(err) {
+				var chain = ['ModifyResource', jsonapify.param('id')];
+				modify(chain)(req, res, function(err) {
 					if (err) return done(err);
 					var resdata = JSON.parse(res._getData());
 					expect(resdata).to.have.deep.property('data.field');
@@ -314,7 +327,8 @@ describe('modify', function() {
 						}],
 					},
 				});
-				modify([resource, jsonapify.param('id')])(req, res, function(err) {
+				var chain = ['ModifyResource', jsonapify.param('id')];
+				modify(chain)(req, res, function(err) {
 					expect(err).to.exist;
 					done();
 				});
@@ -338,7 +352,8 @@ describe('modify', function() {
 						}],
 					},
 				});
-				modify([resource, jsonapify.param('id')])(req, res, function(err) {
+				var chain = ['ModifyResource', jsonapify.param('id')];
+				modify(chain)(req, res, function(err) {
 					if (err) return done(err);
 					var resdata = JSON.parse(res._getData());
 					expect(resdata).to.have.deep.property('data.field');
@@ -363,7 +378,8 @@ describe('modify', function() {
 						}],
 					},
 				});
-				modify([resource, jsonapify.param('id')])(req, res, function(err) {
+				var chain = ['ModifyResource', jsonapify.param('id')];
+				modify(chain)(req, res, function(err) {
  					expect(err).to.exist;
 					done();
 				});
@@ -385,7 +401,8 @@ describe('modify', function() {
 						}],
 					},
 				});
-				modify([resource, jsonapify.param('id')])(req, res, function(err) {
+				var chain = ['ModifyResource', jsonapify.param('id')];
+				modify(chain)(req, res, function(err) {
 					expect(err).to.exist;
 					done();
 				});

@@ -7,6 +7,7 @@ var expect = chai.expect;
 
 var common = require('../common');
 var jsonapify = require('../../');
+var Registry = jsonapify.Registry;
 var Resource = jsonapify.Resource;
 var assign = jsonapify.middleware.assign;
 var InvalidFieldValue = jsonapify.errors.InvalidFieldValue;
@@ -27,10 +28,12 @@ describe('assign', function() {
 	beforeEach(function() {
 		accessor = common.createAccessor();
 		resource = new Resource(model, { type: 'test', field: accessor });
+		Registry.add('AssignResource', resource);
 		res = httpMocks.createResponse();
 	});
 	
 	afterEach(function(done) {
+		Registry.remove('AssignResource');
 		mongoose.connection.db.dropDatabase(done);
 	});
 	
@@ -45,7 +48,7 @@ describe('assign', function() {
 			params: { num: 12345 },
 			body: { data: { type: 'test', field: 'value' }},
 		});
-		assign([resource, { num: jsonapify.param('num') }])(req, res, function(err) {
+		assign(['AssignResource', { num: jsonapify.param('num') }])(req, res, function(err) {
 			if (err) return done(err);
 			expect(accessor.serialize).to.have.been.called.once;
 			expect(accessor.deserialize).to.have.been.called.once;
@@ -66,7 +69,7 @@ describe('assign', function() {
 				params: { num: object.num },
 				body: { data: { type: 'test', field: 'after' }},
 			});
-			assign([resource, { num: jsonapify.param('num') }])(req, res, function(err) {
+			assign(['AssignResource', { num: jsonapify.param('num') }])(req, res, function(err) {
 				if (err) return done(err);
 				expect(accessor.serialize).to.have.been.called.once;
 				expect(accessor.deserialize).to.have.been.called.once;
@@ -87,7 +90,7 @@ describe('assign', function() {
 			body: { data: { type: 'test', field: 'value' }},
 		});
 		var filter = sinon.spy();
-		var chain = [resource, { num: jsonapify.param('num') }];
+		var chain = ['AssignResource', { num: jsonapify.param('num') }];
 		assign(chain, { filters: [filter] })(req, res, function(err) {
 			if (err) return done(err);
 			expect(filter).to.have.been.called.once;

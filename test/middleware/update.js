@@ -9,6 +9,7 @@ var expect = chai.expect;
 var common = require('../common');
 var jsonapify = require('../../');
 var Resource = jsonapify.Resource;
+var Registry = jsonapify.Registry;
 var update = jsonapify.middleware.update;
 var ResourceNotFound = jsonapify.errors.ResourceNotFound;
 var InvalidFieldValue = jsonapify.errors.InvalidFieldValue;
@@ -29,10 +30,12 @@ describe('update', function() {
 			type: 'test',
 			field: accessor,
 		});
+		Registry.add('UpdateResource', resource);
 		res = httpMocks.createResponse();
 	});
 	
 	afterEach(function(done) {
+		Registry.remove('UpdateResource');
 		mongoose.connection.db.dropDatabase(done);
 	});
 	
@@ -49,7 +52,7 @@ describe('update', function() {
 				params: { id: object._id },
 				body: { data: { type: 'test', field: 'after' }},
 			});
-			update([resource, jsonapify.param('id')])(req, res, function(err) {
+			update(['UpdateResource', jsonapify.param('id')])(req, res, function(err) {
 				if (err) return done(err);
 				expect(accessor.serialize).to.have.been.called.once;
 				expect(accessor.deserialize).to.have.been.called.once;
@@ -67,7 +70,7 @@ describe('update', function() {
 				params: { id: object._id },
 				body: { data: { type: 'invalid', field: 'after' }},
 			});
-			update([resource, jsonapify.param('id')])(req, res, function(err) {
+			update(['UpdateResource', jsonapify.param('id')])(req, res, function(err) {
 				expect(err).to.be.an.instanceof(InvalidFieldValue);
 				done();
 			});
@@ -81,7 +84,7 @@ describe('update', function() {
 			params: { id: ObjectId() },
 			body: { data: { type: 'test', field: 'after' }},
 		});
-		update([resource, jsonapify.param('id')])(req, res, function(err) {
+		update(['UpdateResource', jsonapify.param('id')])(req, res, function(err) {
 			expect(err).to.be.an.instanceof(ResourceNotFound);
 			done();
 		});
@@ -97,7 +100,7 @@ describe('update', function() {
 				params: { id: object._id },
 				body: { data: { type: 'test', field: 'after' }},
 			});
-			var chain = [resource, jsonapify.param('id')];
+			var chain = ['UpdateResource', jsonapify.param('id')];
 			update(chain, { filters: [filter] })(req, res, function(err) {
 				if (err) return done(err);
 				expect(filter).to.have.been.called.once;

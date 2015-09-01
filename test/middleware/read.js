@@ -9,6 +9,7 @@ var expect = chai.expect;
 var common = require('../common');
 var jsonapify = require('../../');
 var Resource = jsonapify.Resource;
+var Registry = jsonapify.Registry;
 var read = jsonapify.middleware.read;
 var Property = jsonapify.accessors.Property;
 var ResourceNotFound = jsonapify.errors.ResourceNotFound;
@@ -26,10 +27,12 @@ describe('read', function() {
 	beforeEach(function() {
 		accessor = common.createAccessor();
 		resource = new Resource(model, { type: 'test', field: accessor });
+		Registry.add('ReadResource', resource);
 		res = httpMocks.createResponse();
 	});
 	
 	afterEach(function(done) {
+		Registry.remove('ReadResource');
 		mongoose.connection.db.dropDatabase(done);
 	});
 	
@@ -43,7 +46,7 @@ describe('read', function() {
 			accessor.serialize.callsArgWithAsync(3, null, 'value');
 			accessor.deserialize.callsArgWithAsync(4, null);
 			var req = httpMocks.createRequest({ params: { id: object._id }});
-			read([resource, jsonapify.param('id')])(req, res, function(err) {
+			read(['ReadResource', jsonapify.param('id')])(req, res, function(err) {
 				if (err) return done(err);
 				expect(accessor.serialize).to.have.been.called.once;
 				expect(accessor.deserialize).to.not.have.been.called;
@@ -56,7 +59,7 @@ describe('read', function() {
 		accessor.serialize.callsArgWithAsync(3, null, 'value');
 		accessor.deserialize.callsArgWithAsync(4, null);
 		var req = httpMocks.createRequest({ params: { id: ObjectId() }});
-		read([resource, jsonapify.param('id')])(req, res, function(err) {
+		read(['ReadResource', jsonapify.param('id')])(req, res, function(err) {
 			expect(err).to.be.an.instanceof(ResourceNotFound);
 			done();
 		});
@@ -69,7 +72,7 @@ describe('read', function() {
 			accessor.serialize.callsArgWithAsync(3, null, 'value');
 			accessor.deserialize.callsArgWithAsync(4, null);
 			var req = httpMocks.createRequest({ params: { id: object._id }});
-			var chain = [resource, jsonapify.param('id')];
+			var chain = ['ReadResource', jsonapify.param('id')];
 			read(chain, { filters: [filter] })(req, res, function(err) {
 				if (err) return done(err);
 				expect(filter).to.have.been.called.once;

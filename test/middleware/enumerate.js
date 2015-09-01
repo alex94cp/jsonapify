@@ -2,6 +2,7 @@ var _ = require('lodash');
 var chai = require('chai');
 var sinon = require('sinon');
 var async = require('async');
+chai.use(require('sinon-chai'));
 var mongoose = require('mongoose');
 var httpMocks = require('node-mocks-http');
 var expect = chai.expect;
@@ -9,6 +10,7 @@ var expect = chai.expect;
 var common = require('../common');
 var jsonapify = require('../../');
 var Resource = jsonapify.Resource;
+var Registry = jsonapify.Registry;
 var enumerate = jsonapify.middleware.enumerate;
 
 describe('enumerate', function() {
@@ -26,6 +28,7 @@ describe('enumerate', function() {
 		res = httpMocks.createResponse();
 		accessor = common.createAccessor();
 		resource = new Resource(model, { type: 'test', field: accessor });
+		Registry.add('EnumResource', resource);
 		async.parallel([
 			function(next) { model.create({}, next); },
 			function(next) { model.create({}, next); },
@@ -38,6 +41,7 @@ describe('enumerate', function() {
 	});
 	
 	afterEach(function(done) {
+		Registry.remove('EnumResource');
 		mongoose.connection.db.dropDatabase(done);
 	});
 	
@@ -46,9 +50,8 @@ describe('enumerate', function() {
 	});
 	
 	it('responds with an array of resources', function(done) {
-		accessor.serialize.callsArgWithAsync(3, null, 'value');
-		accessor.deserialize.callsArgWithAsync(4, null);
-		enumerate(resource)(req, res, function(err) {
+		common.initAccessor(accessor, 'value', null);
+		enumerate('EnumResource')(req, res, function(err) {
 			if (err) return done(err);
 			expect(accessor.serialize).to.have.been.called.thrice;
 			expect(accessor.deserialize).to.not.have.been.called;
@@ -58,9 +61,8 @@ describe('enumerate', function() {
 	
 	it('invokes transaction filters', function(done) {
 		var filter = sinon.spy();
-		accessor.serialize.callsArgWithAsync(3, null, 'value');
-		accessor.deserialize.callsArgWithAsync(4, null);
-		enumerate(resource, { filters: [filter] })(req, res, function(err) {
+		common.initAccessor(accessor, 'value', null);
+		enumerate('EnumResource', { filters: [filter] })(req, res, function(err) {
 			if (err) return done(err);
 			expect(filter).to.have.been.called.once;
 			done();
