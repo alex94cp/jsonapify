@@ -34,6 +34,8 @@ var userResource = new jsonapify.Resource(User, {
 		},
 	},
 });
+
+jsonapify.Registry.add('User', userResource);
 ```
 
 ### ES6 in action
@@ -41,7 +43,7 @@ var userResource = new jsonapify.Resource(User, {
 This is how the previous example would look in ES6:
 
 ```js
-import {Resource, Property} from 'jsonapify';
+import {Registry, Resource, Property} from 'jsonapify';
 import User from '../models';
 
 const userResource = new Resource(User, {
@@ -55,6 +57,8 @@ const userResource = new Resource(User, {
 		},
 	},
 });
+
+Registry.add('User', userResource);
 ```
 
 ## Navigating resources
@@ -74,6 +78,8 @@ var userResource = new jsonapify.Resource(User, {
 		},
 	},
 });
+
+jsonapify.Registry.add('User', userResource);
 ```
 
 ## Linking resources
@@ -88,9 +94,11 @@ var userResource = new jsonapify.Resource(User, {
 	type: 'users',
 	id: new jsonapify.Property('_id'),
 	relationships: {
-		role: new jsonapify.Ref(roleResource, 'role'),
+		role: new jsonapify.Ref('Role', 'role'),
 	},
 });
+
+jsonapify.Registry.add('User', userResource);
 ```
 
 ## Exposing resources
@@ -99,7 +107,7 @@ We all know about [DRY](https://en.wikipedia.org/wiki/Don%27t_repeat_yourself). 
 
 ```js
 app.get('/users/', [
-	jsonapify.enumerate(userResource),
+	jsonapify.enumerate('User'),
 	jsonapify.errorHandler()
 ]);
 ```
