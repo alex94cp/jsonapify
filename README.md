@@ -119,7 +119,7 @@ app.get('/users/', [
 Everything in REST is a resource. Resources can have subresources, too. That means that you can apply a READ operation (GET verb in REST terms) to a subresource. Let's see how resource addressing works in jsonapify.
 
 * Resource chains come in the form of **\[\(typename, \[selector\]\)+\]**.
-* Resource chain selectors are applied at request-time, and they select a subset of objects of the preceeding resource type.
+* Resource chain selectors are applied at request-time, and are used to select a subset of objects of the preceeding resource type.
 * At this moment, selectors can get info from:
     - Request params: `jsonapify.param(...)`
     - Request query params: `jsonapify.query(...)`
@@ -129,17 +129,15 @@ Everything in REST is a resource. Resources can have subresources, too. That mea
 
 For example, the following would be examples of resource chains:
 
-* Full chain:
 ```js
-[
+/* full chain */ [
 	'UserGroup', { name: jsonapify.param('name') },
 	'User', jsonapify.param('id'),
 ]
 ```
 
-* Partial chain:
 ```js
-[
+/* partial chain */ [
 	'UserGroup', { name: jsonapify.param('name') }, 'User'
 ]
 ```
