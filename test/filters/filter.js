@@ -58,7 +58,7 @@ describe('filter', function() {
 			], function(err, objects) {
 				if (err) return done(err);
 				var req = httpMocks.createRequest({
-					query: { filter: { number: '== 0' }},
+					query: { filter: { number: '= 0' }},
 				});
 				transaction.notify(resource, 'start', req);
 				var resview = resource.view(transaction);
