@@ -125,18 +125,31 @@ Everything in REST is a resource. Resources can have subresources, too. That mea
     - Request query params: `jsonapify.query(...)`
     - Resource parent object: `jsonapify.parent(...)`
 * There are **partial** and **full** resource chains. A full resource chain maps to a single resource object, whereas a partial resource chain (the ones missing the trailing selector) map to a subset of resource objects. 
-* Some jsonapify operations require full resource chains (ie: READ, UPDATE,...), while others require partial resource chains (only CREATE at this moment). Therefore, the same resource chain may be interpreted as a full or a partial one depending on the context.
+* Some jsonapify operations require full resource chains (ie: *READ*, *UPDATE*,...), while others require partial resource chains (only *CREATE* at this moment). Therefore, the same resource chain may be interpreted as a full or a partial one depending on the context.
 
-For example, a READ operation with the following resource chain, directed at URI '/groups/\<group\>/users/\<user\>', would retrieve a resource object of type User, with `group_id == parent._id and name == user`, where `parent` is the group the user logically belongs to:
+For example, a *READ* operation with the following resource chain, directed to the URI '/groups/{group}/users/{user}', would retrieve a resource object of type 'User', with `group == parent._id and name == user`, where `parent` is the group the user logically belongs to:
 
 ```js
-[
+/* full chain */ [
 	'UserGroup', {
 		name: jsonapify.param('group'),
 	},
 	'User', {
-		group_id: jsonapify.parent('_id'),
+		group: jsonapify.parent('_id'),
 		name: jsonapify.param('user'),
+	},
+]
+```
+
+On the other hand, a *CREATE* operation with the following resource chain, directed to the same URI, would store a resource object of type 'User', with `group == parent._id` and the rest of the properties from the request body:
+
+```js
+/* partial chain */ [
+	'UserGroup', {
+		name: jsonapify.param('group'),
+	},
+	'User', {
+		group: jsonapify.parent('_id'),
 	},
 ]
 ```
