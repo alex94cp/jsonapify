@@ -30,17 +30,17 @@
   "devDependencies": {
     "chai": "^3.2.0",
     "coveralls": "^2.11.4",
-    "istanbul": "^0.3.17",
-    "mocha": "^2.2.5",
+    "istanbul": "^0.3.19",
+    "mocha": "^2.3.0",
     "node-mocks-http": "^1.4.3",
-    "sinon": "^1.15.4",
+    "sinon": "^1.16.1",
     "sinon-chai": "^2.8.0"
   },
   "dependencies": {
     "async": "^1.4.2",
     "glob2re": "^1.0.1",
-    "jsonpatch": "^1.0.1",
+    "jsonpatch": "^2.0.0",
     "lodash": "^3.10.1",
-    "mongoose": "^4.1.2"
+    "mongoose": "^4.1.5"
   }
 }

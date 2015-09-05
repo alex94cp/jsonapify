@@ -311,8 +311,7 @@ describe('modify', function() {
 			});
 		});
 		
-		// https://github.com/dharmafly/jsonpatch.js/issues/21
-		it.skip('gives an error if the value does not exist', function(done) {
+		it('gives an error if the value does not exist', function(done) {
 			model.create({}, function(err, object) {
 				if (err) return done(err);
 				common.initAccessor(accessors.field);
