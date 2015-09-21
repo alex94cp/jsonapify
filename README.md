@@ -35,7 +35,7 @@ var userResource = new jsonapify.Resource(User, {
 	},
 });
 
-jsonapify.Registry.add('User', userResource);
+jsonapify.Runtime.addResource('User', userResource);
 ```
 
 ### ES6 in action
@@ -43,7 +43,7 @@ jsonapify.Registry.add('User', userResource);
 This is how the previous example would look in ES6:
 
 ```js
-import {Registry, Resource, Property} from 'jsonapify';
+import {Property, Resource, Runtime} from 'jsonapify';
 import User from '../models';
 
 const userResource = new Resource(User, {
@@ -58,7 +58,7 @@ const userResource = new Resource(User, {
 	},
 });
 
-Registry.add('User', userResource);
+Runtime.addResource('User', userResource);
 ```
 
 ## Navigating resources
@@ -79,7 +79,7 @@ var userResource = new jsonapify.Resource(User, {
 	},
 });
 
-jsonapify.Registry.add('User', userResource);
+jsonapify.Runtime.addResource('User', userResource);
 ```
 
 ## Linking resources
@@ -98,7 +98,7 @@ var userResource = new jsonapify.Resource(User, {
 	},
 });
 
-jsonapify.Registry.add('User', userResource);
+jsonapify.Runtime.addResource('User', userResource);
 ```
 
 **Note**: **_related resources_ are not _subresources_**. Subresources are resource-like objects so tightly linked to their parent resource that they can't exist on their own. jsonapify does not support access of related resources as subresources. This is by-design.
