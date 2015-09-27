@@ -7,8 +7,9 @@ var expect = chai.expect;
 
 var common = require('../common');
 var jsonapify = require('../../');
+
+var Runtime = jsonapify.Runtime;
 var Resource = jsonapify.Resource;
-var Registry = jsonapify.Registry;
 var create = jsonapify.middleware.create;
 var InvalidFieldValue = jsonapify.errors.InvalidFieldValue;
 
@@ -25,12 +26,12 @@ describe('create', function() {
 	beforeEach(function() {
 		accessor = common.createAccessor();
 		resource = new Resource(model, { type: 'test', field: accessor });
-		Registry.add('CreateResource', resource);
+		Runtime.addResource('CreateResource', resource);
 		res = httpMocks.createResponse();
 	});
 	
 	afterEach(function(done) {
-		Registry.remove('CreateResource');
+		Runtime.removeResource('CreateResource');
 		mongoose.connection.db.dropDatabase(done);
 	});
 	

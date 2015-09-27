@@ -9,8 +9,9 @@ var expect = chai.expect;
 
 var common = require('../common');
 var jsonapify = require('../../');
+
+var Runtime = jsonapify.Runtime;
 var Resource = jsonapify.Resource;
-var Registry = jsonapify.Registry;
 var enumerate = jsonapify.middleware.enumerate;
 
 describe('enumerate', function() {
@@ -28,7 +29,7 @@ describe('enumerate', function() {
 		res = httpMocks.createResponse();
 		accessor = common.createAccessor();
 		resource = new Resource(model, { type: 'test', field: accessor });
-		Registry.add('EnumResource', resource);
+		Runtime.addResource('EnumResource', resource);
 		async.parallel([
 			function(next) { model.create({}, next); },
 			function(next) { model.create({}, next); },
@@ -41,7 +42,7 @@ describe('enumerate', function() {
 	});
 	
 	afterEach(function(done) {
-		Registry.remove('EnumResource');
+		Runtime.removeResource('EnumResource');
 		mongoose.connection.db.dropDatabase(done);
 	});
 	

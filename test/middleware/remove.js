@@ -7,8 +7,9 @@ var ObjectId = mongoose.Types.ObjectId;
 var expect = chai.expect;
 
 var jsonapify = require('../../');
+
+var Runtime = jsonapify.Runtime;
 var Resource = jsonapify.Resource;
-var Registry = jsonapify.Registry;
 var remove = jsonapify.middleware.remove;
 var ResourceNotFound = jsonapify.errors.ResourceNotFound;
 
@@ -24,12 +25,12 @@ describe('remove', function() {
 	
 	beforeEach(function() {
 		resource = new Resource(model, { type: 'test' });
-		Registry.add('RemoveResource', resource);
+		Runtime.addResource('RemoveResource', resource);
 		res = httpMocks.createResponse();
 	});
 	
 	afterEach(function(done) {
-		Registry.remove('RemoveResource');
+		Runtime.removeResource('RemoveResource');
 		mongoose.connection.db.dropDatabase(done);
 	});
 	

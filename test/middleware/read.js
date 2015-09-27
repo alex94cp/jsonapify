@@ -8,8 +8,9 @@ var expect = chai.expect;
 
 var common = require('../common');
 var jsonapify = require('../../');
+
+var Runtime = jsonapify.Runtime;
 var Resource = jsonapify.Resource;
-var Registry = jsonapify.Registry;
 var read = jsonapify.middleware.read;
 var Property = jsonapify.accessors.Property;
 var ResourceNotFound = jsonapify.errors.ResourceNotFound;
@@ -27,12 +28,12 @@ describe('read', function() {
 	beforeEach(function() {
 		accessor = common.createAccessor();
 		resource = new Resource(model, { type: 'test', field: accessor });
-		Registry.add('ReadResource', resource);
+		Runtime.addResource('ReadResource', resource);
 		res = httpMocks.createResponse();
 	});
 	
 	afterEach(function(done) {
-		Registry.remove('ReadResource');
+		Runtime.removeResource('ReadResource');
 		mongoose.connection.db.dropDatabase(done);
 	});
 	
