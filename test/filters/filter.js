@@ -27,14 +27,8 @@ describe('filter', function() {
 
 	beforeEach(function() {
 		resource = new Resource(model, {
-			number: {
-				value: new Property('number'),
-				nullable: true,
-			},
-			string: {
-				value: new Property('string'),
-				nullable: true,
-			},
+			number: new Property('number'),
+			string: new Property('string'),
 		});
 		var res = httpMocks.createResponse();
 		var response = new Response(res);

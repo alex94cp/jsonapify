@@ -21,7 +21,7 @@ describe('modify', function() {
 			done();
 		});
 	});
-	
+
 	beforeEach(function() {
 		accessors = {
 			foo: new jsonapify.Accessor,
@@ -30,28 +30,22 @@ describe('modify', function() {
 		};
 		resource = new Resource(model, {
 			type: 'test',
-			field: {
-				value: accessors.field,
-				nullable: true,
-			},
-			output: {
-				value: accessors.output,
-				nullable: true,
-			},
+			field: accessors.field,
+			output: accessors.output,
 		});
 		Registry.add('ModifyResource', resource);
 		res = httpMocks.createResponse();
 	});
-	
+
 	afterEach(function(done) {
 		Registry.remove('ModifyResource');
 		mongoose.connection.db.dropDatabase(done);
 	});
-	
+
 	after(function(done) {
 		mongoose.disconnect(done);
 	});
-	
+
 	describe('add', function() {
 		it('inserts element in array at index', function(done) {
 			model.create({}, function(err, object) {
@@ -78,7 +72,7 @@ describe('modify', function() {
 				});
 			});
 		});
-		
+
 		it('adds new property to object', function(done) {
 			model.create({}, function(err, object) {
 				if (err) return done(err);
@@ -104,7 +98,7 @@ describe('modify', function() {
 				});
 			});
 		});
-		
+
 		it('replaces existing object property', function(done) {
 			model.create({}, function(err, object) {
 				if (err) return done(err);
@@ -131,7 +125,7 @@ describe('modify', function() {
 			});
 		});
 	});
-	
+
 	describe('remove', function() {
 		it('removes the value at the target location', function(done) {
 			model.create({}, function(err, object) {
@@ -156,7 +150,7 @@ describe('modify', function() {
 				});
 			});
 		});
-		
+
 		it('gives an error if the value does not exist', function(done) {
 			model.create({}, function(err, object) {
 				if (err) return done(err);
@@ -179,7 +173,7 @@ describe('modify', function() {
 			});
 		});
 	});
-	
+
 	describe('replace', function() {
 		it('replaces the value at the target location', function(done) {
 			model.create({}, function(err, object) {
@@ -206,7 +200,7 @@ describe('modify', function() {
 				});
 			});
 		});
-		
+
 		it('gives an error if the value does not exist', function(done) {
 			model.create({}, function(err, object) {
 				if (err) return done(err);
@@ -229,7 +223,7 @@ describe('modify', function() {
 			});
 		});
 	});
-	
+
 	describe('move', function() {
 		it('removes the value from path and adds it to the target location', function(done) {
 			model.create({}, function(err, object) {
@@ -257,7 +251,7 @@ describe('modify', function() {
 				});
 			});
 		});
-		
+
 		it('gives an error if the value does not exist', function(done) {
 			model.create({}, function(err, object) {
 				if (err) return done(err);
@@ -281,7 +275,7 @@ describe('modify', function() {
 			});
 		});
 	});
-	
+
 	describe('copy', function() {
 		it('copies the value from path to the target location', function(done) {
 			model.create({}, function(err, object) {
@@ -310,7 +304,7 @@ describe('modify', function() {
 				});
 			});
 		});
-		
+
 		it('gives an error if the value does not exist', function(done) {
 			model.create({}, function(err, object) {
 				if (err) return done(err);
@@ -334,7 +328,7 @@ describe('modify', function() {
 			});
 		});
 	});
-	
+
 	describe('test', function() {
 		it('tests that value at path is equal to value', function(done) {
 			model.create({}, function(err, object) {
@@ -361,7 +355,7 @@ describe('modify', function() {
 				});
 			});
 		});
-		
+
 		it('gives an error if values do not match', function(done) {
 			model.create({}, function(err, object) {
 				if (err) return done(err);
@@ -384,7 +378,7 @@ describe('modify', function() {
 				});
 			});
 		});
-		
+
 		it('gives an error if the value does not exist', function(done) {
 			model.create({}, function(err, object) {
 				if (err) return done(err);
