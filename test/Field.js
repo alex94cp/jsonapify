@@ -64,14 +64,14 @@ describe('Field', function() {
 		});
 	});
 	
-	describe('#accessProperty', function() {
-		it('invokes accessProperty method on accessor', function() {
+	describe('#visitProperties', function() {
+		it('invokes visitProperties method on accessor', function() {
 			var callback = sinon.spy();
 			var accessor = common.createAccessor();
-			accessor.accessProperty.callsArgWith(0, 'property');
+			accessor.visitProperties.callsArgWith(0, 'property');
 			var field = new Field(resource, 'name', accessor);
-			field.accessProperty(callback);
-			expect(accessor.accessProperty).to.have.been.calledWith(callback);
+			field.visitProperties(callback);
+			expect(accessor.visitProperties).to.have.been.calledWith(callback);
 			expect(callback).to.have.been.calledWith('property');
 		});
 	});
