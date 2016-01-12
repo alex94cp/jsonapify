@@ -9,6 +9,8 @@
 
 jsonapify is a library to assist the development of JSON-API compatible APIs with NodeJS.
 
+You can see jsonapify in action in this [repo](https://github.com/avem-ifmsa/avem-rest-api).
+
 ## Why jsonapify?
 
 - __Simple__: jsonapify is designed around simplicity. *Easy things are easy to do, hard things are possible*. If you feel something can be made simpler, by all means [file an issue](https://github.com/alex94puchades/jsonapify/issues)!
