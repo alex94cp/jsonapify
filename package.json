@@ -33,6 +33,7 @@
     "istanbul": "^0.4.0",
     "mocha": "^2.3.3",
     "node-mocks-http": "^1.5.0",
+    "qs": "^6.1.0",
     "sinon": "^1.17.2",
     "sinon-chai": "^2.8.0"
   },
@@ -41,6 +42,7 @@
     "glob2re": "^1.0.1",
     "jsonpatch": "^2.0.0",
     "lodash": "^3.10.1",
-    "mongoose": "^4.2.3"
+    "mongoose": "^4.2.3",
+    "qs": "^6.1.0"
   }
 }

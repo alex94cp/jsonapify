@@ -4,6 +4,7 @@ var async = require('async');
 chai.use(require('sinon-chai'));
 var mongoose = require('mongoose');
 var httpMocks = require('node-mocks-http');
+var qs = require('qs');
 var expect = chai.expect;
 
 var common = require('../common');
@@ -36,7 +37,6 @@ describe('paginate', function() {
 			var res = httpMocks.createResponse();
 			var response = new Response(res);
 			transaction = new Transaction(resource, response);
-			jsonapify.filters.paginate()(transaction);
 			done();
 		});
 	});
@@ -50,9 +50,12 @@ describe('paginate', function() {
 	});
 
 	it('paginates resources and adds pagination links', function(done) {
+		var query = { page: { number: 2, size: 2 }};
 		var req = httpMocks.createRequest({
-			query: { page: { number: 2, size: 2 }}
+			url: '/test?' + qs.stringify(query),
+			query: query
 		});
+		jsonapify.filters.paginate()(transaction, req);
 		transaction.notify(resource, 'start', req);
 		var resview = resource.view(transaction);
 		resview.findMany({}, function(err, results) {
@@ -61,18 +64,21 @@ describe('paginate', function() {
 			var response = transaction.response;
 			response.meta['count'] = objects.length;
 			transaction.notify(resource, 'end');
-			expect(response).to.have.deep.property('links.first');
-			expect(response).to.have.deep.property('links.last');
-			expect(response).to.have.deep.property('links.prev');
-			expect(response).to.have.deep.property('links.next');
+			expect(response).to.have.deep.property('links.first', '/test?page[number]=1&page[size]=2');
+			expect(response).to.have.deep.property('links.last', '/test?page[number]=3&page[size]=2');
+			expect(response).to.have.deep.property('links.prev', '/test?page[number]=1&page[size]=2');
+			expect(response).to.have.deep.property('links.next', '/test?page[number]=3&page[size]=2');
 			done();
 		});
 	});
 
 	it('omits prev link if first page selected', function(done) {
+		var query = { page: { number: 1, size: 2 }};
 		var req = httpMocks.createRequest({
-			query: { page: { number: 1, size: 2 }}
+			url: '/test?' + qs.stringify(query),
+			query: query
 		});
+		jsonapify.filters.paginate()(transaction, req);
 		transaction.notify(resource, 'start', req);
 		var resview = resource.view(transaction);
 		resview.findMany({}, function(err, results) {
@@ -81,18 +87,21 @@ describe('paginate', function() {
 			var response = transaction.response;
 			response.meta['count'] = objects.length;
 			transaction.notify(resource, 'end');
-			expect(response).to.have.deep.property('links.first');
-			expect(response).to.have.deep.property('links.last');
+			expect(response).to.have.deep.property('links.first', '/test?page[number]=1&page[size]=2');
+			expect(response).to.have.deep.property('links.last', '/test?page[number]=3&page[size]=2');
 			expect(response).to.not.have.deep.property('links.prev');
-			expect(response).to.have.deep.property('links.next');
+			expect(response).to.have.deep.property('links.next', '/test?page[number]=2&page[size]=2');
 			done();
 		});
 	});
 
 	it('omits next link if last page selected', function(done) {
+		var query = { page: { number: objects.length - 2, size: 2 }};
 		var req = httpMocks.createRequest({
-			query: { page: { number: objects.length - 2, size: 2 }}
+			url: '/test?' + qs.stringify(query),
+			query: query
 		});
+		jsonapify.filters.paginate()(transaction, req);
 		transaction.notify(resource, 'start', req);
 		var resview = resource.view(transaction);
 		resview.findMany({}, function(err, results) {
@@ -101,9 +110,9 @@ describe('paginate', function() {
 			var response = transaction.response;
 			response.meta['count'] = objects.length;
 			transaction.notify(resource, 'end');
-			expect(response).to.have.deep.property('links.first');
-			expect(response).to.have.deep.property('links.last');
-			expect(response).to.have.deep.property('links.prev');
+			expect(response).to.have.deep.property('links.first', '/test?page[number]=1&page[size]=2');
+			expect(response).to.have.deep.property('links.last', '/test?page[number]=3&page[size]=2');
+			expect(response).to.have.deep.property('links.prev', '/test?page[number]=2&page[size]=2');
 			expect(response).to.not.have.deep.property('links.next');
 			done();
 		});
