@@ -126,7 +126,7 @@ Everything in REST is a resource. Resources can have subresources, too. That mea
     - Request params: `jsonapify.param(...)`
     - Request query params: `jsonapify.query(...)`
     - Resource parent object: `jsonapify.parent(...)`
-* There are **partial** and **full** resource chains. A full resource chain maps to a single resource object, whereas a partial resource chain (the ones missing the trailing selector) map to a subset of resource objects. 
+* There are **partial** and **full** resource chains. A *full resource chain* maps to a single resource object, whereas a *partial resource chain* maps to a subset of resource objects. The same chain can be considered *full* or *partial* depending on the middleware (*partial* for enumerate, and *full* for create, read, update and the like).
 * Some jsonapify operations require full resource chains (ie: *READ*, *UPDATE*,...), while others require partial resource chains (only *CREATE* at this moment). Therefore, the same resource chain may be interpreted as a full or a partial one depending on the context.
 
 For example, a *READ* operation with the following resource chain, directed to the URI '/groups/{group}/users/{user}', would retrieve a resource object of type 'User', with `group == parent._id and name == user`, where `parent` is the group the user logically belongs to:
