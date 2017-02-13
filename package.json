@@ -31,16 +31,16 @@
     "chai": "^3.4.0",
     "coveralls": "^2.11.4",
     "istanbul": "^0.4.0",
-    "mocha": "^2.3.3",
+    "mocha": "^3.2.0",
     "node-mocks-http": "^1.5.0",
     "qs": "^6.1.0",
     "sinon": "^1.17.2",
     "sinon-chai": "^2.8.0"
   },
   "dependencies": {
-    "async": "^1.5.0",
+    "async": "^2.1.4",
     "glob2re": "^1.0.1",
-    "jsonpatch": "^2.0.0",
+    "jsonpatch": "^3.0.1",
     "lodash": "^3.10.1",
     "mongoose": "^4.2.3",
     "qs": "^6.1.0"
